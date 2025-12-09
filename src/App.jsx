@@ -28,6 +28,12 @@ const SettingsIcon = () => (
   </svg>
 );
 
+const HelpIcon = () => (
+  <svg className="button-icon" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z" />
+  </svg>
+);
+
 function App() {
   // Game state
   const [gameStarted, setGameStarted] = useState(false);
@@ -365,7 +371,7 @@ function App() {
 
   const isPauseEnabled = gameStarted && !gameOver && !gameWon && !gamePaused;
 
-  // Add these handler functions (inside the App function, before return)
+  // Settings handlers
   const handleOpenSettings = () => {
     setShowSettings(true);
   };
@@ -377,6 +383,19 @@ function App() {
   const handleSaveSettings = (newSettings) => {
     setGameSettings(newSettings);
     setShowSettings(false);
+  };
+
+  // Help button handler (placeholder for now)
+  const handleHelp = () => {
+    alert(
+      "Help feature coming soon! This game is called 10n.\n\n" +
+        "Game Rules:\n" +
+        "1. Numbers appear on the grid over time\n" +
+        "2. Select cells that sum to a multiple of 10 (10, 20, 30, etc.)\n" +
+        "3. When you select cells that sum to a multiple of 10, they disappear and you get points\n" +
+        "4. Try to reach the target score before the grid fills up!\n\n" +
+        "Use the Settings button to customize grid size, speed, and target score."
+    );
   };
 
   return (
@@ -421,49 +440,66 @@ function App() {
         </div>
 
         <div className="header-controls-row">
-          <div className="game-controls">
-            <button
-              className={`control-btn start-btn ${
-                gameStarted && !gameOver && !gamePaused ? "active" : ""
-              }`}
-              onClick={handleStartGame}
-              disabled={gameStarted && !gameOver && !gamePaused} // ADD THIS LINE
-              title={gamePaused ? "Resume Game" : "Start Game"}
-            >
-              <PlayIcon />
-            </button>
+          <div className="controls-container">
+            {/* Game controls - centered */}
+            <div className="game-controls">
+              <button
+                className={`control-btn start-btn ${
+                  gameStarted && !gameOver && !gamePaused ? "active" : ""
+                }`}
+                onClick={handleStartGame}
+                disabled={gameStarted && !gameOver && !gamePaused}
+                title={gamePaused ? "Resume Game" : "Start Game"}
+              >
+                <PlayIcon />
+              </button>
 
-            <button
-              className="control-btn deselect-btn"
-              onClick={handleDeselectAll}
-              disabled={
-                !gameStarted ||
-                gameOver ||
-                gamePaused ||
-                selectedCells.size === 0
-              }
-              title="Deselect All"
-            >
-              <DeselectIcon />
-            </button>
+              <button
+                className="control-btn deselect-btn"
+                onClick={handleDeselectAll}
+                disabled={
+                  !gameStarted ||
+                  gameOver ||
+                  gamePaused ||
+                  selectedCells.size === 0
+                }
+                title="Deselect All"
+              >
+                <DeselectIcon />
+              </button>
 
-            <button
-              className="control-btn pause-btn"
-              onClick={handlePauseGame}
-              disabled={!isPauseEnabled}
-              title="Pause Game"
-            >
-              <PauseIcon />
-            </button>
+              <button
+                className="control-btn pause-btn"
+                onClick={handlePauseGame}
+                disabled={!isPauseEnabled}
+                title="Pause Game"
+              >
+                <PauseIcon />
+              </button>
+            </div>
 
-            <button
-              className="control-btn settings-btn"
-              onClick={handleOpenSettings}
-              disabled={isPauseEnabled} // Same as Start button: disabled when game is running
-              title="Game Settings"
-            >
-              <SettingsIcon />
-            </button>
+            {/* Help & Settings buttons - right aligned --- begin */}
+
+            <div className="utility-controls">
+              <button
+                className="control-btn help-btn"
+                onClick={handleHelp}
+                title="Help & Instructions"
+              >
+                <HelpIcon />
+              </button>
+
+              <button
+                className="control-btn settings-btn"
+                onClick={handleOpenSettings}
+                disabled={isPauseEnabled}
+                title="Game Settings"
+              >
+                <SettingsIcon />
+              </button>
+            </div>
+
+            {/* Help & Settings buttons - right aligned --- end */}
           </div>
         </div>
       </header>
@@ -529,7 +565,6 @@ function App() {
         </div>
       </footer>
 
-      {/* Add this at the end of your JSX, before the final closing </div> */}
       <SettingsDialog
         isOpen={showSettings}
         onClose={handleCloseSettings}
