@@ -1,5 +1,6 @@
 /* src/components/SettingsDialog.css */
-/* Modal Overlay */
+
+/* More compact Modal Overlay */
 .settings-dialog-overlay {
   position: fixed;
   top: 0;
@@ -13,6 +14,7 @@
   z-index: 1000;
   backdrop-filter: blur(3px);
   animation: fadeIn 0.2s ease-out;
+  padding: 10px;
 }
 
 @keyframes fadeIn {
@@ -24,24 +26,24 @@
   }
 }
 
-/* Dialog Container */
+/* More compact Dialog Container */
 .settings-dialog {
   background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
-  border-radius: 12px;
+  border-radius: 10px;
   border: 2px solid #00adb5;
   width: 90%;
-  max-width: 500px;
+  max-width: 450px; /* Reduced from 500px */
   max-height: 85vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
   animation: slideUp 0.3s ease-out;
 }
 
 @keyframes slideUp {
   from {
-    transform: translateY(20px);
+    transform: translateY(15px);
     opacity: 0;
   }
   to {
@@ -50,19 +52,19 @@
   }
 }
 
-/* Dialog Header */
+/* More compact Dialog Header */
 .settings-dialog-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
+  padding: 15px 20px; /* Reduced padding */
   border-bottom: 1px solid rgba(0, 173, 181, 0.3);
   background-color: rgba(255, 255, 255, 0.05);
 }
 
 .settings-dialog-title {
   color: #00adb5;
-  font-size: 1.5rem;
+  font-size: 1.3rem; /* Smaller font */
   font-weight: 700;
   margin: 0;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -73,7 +75,7 @@
   border: none;
   color: #fff;
   cursor: pointer;
-  padding: 8px;
+  padding: 6px; /* Smaller padding */
   border-radius: 6px;
   display: flex;
   align-items: center;
@@ -84,131 +86,28 @@
 
 .settings-dialog-close-btn:hover {
   background-color: rgba(255, 255, 255, 0.2);
-  transform: scale(1.1);
+  transform: scale(1.05); /* Smaller scale */
 }
 
 .close-icon {
-  width: 24px;
-  height: 24px;
+  width: 20px; /* Smaller icon */
+  height: 20px;
 }
 
-/* Dialog Content */
+/* More compact Dialog Content */
 .settings-dialog-content {
-  padding: 25px 20px;
+  padding: 15px 20px; /* Reduced padding */
   flex: 1;
   overflow-y: auto;
   color: #eee;
 }
 
-.settings-placeholder {
-  text-align: center;
-  color: #aaa;
-  font-style: italic;
-  padding: 40px 20px;
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  border: 1px dashed rgba(255, 255, 255, 0.1);
-}
-
-/* Dialog Footer */
-.settings-dialog-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 15px;
-  padding: 20px;
-  border-top: 1px solid rgba(0, 173, 181, 0.3);
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
-.settings-btn {
-  padding: 12px 24px;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 120px;
-}
-
-.settings-btn-close {
-  background-color: #393e46;
-  color: #fff;
-}
-
-.settings-btn-close:hover {
-  background-color: #4a4f57;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.settings-btn-save {
-  background-color: #00adb5;
-  color: #fff;
-}
-
-.settings-btn-save:hover {
-  background-color: #00ff88;
-  color: #000;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 255, 136, 0.3);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .settings-dialog {
-    width: 95%;
-    max-height: 90vh;
-  }
-
-  .settings-dialog-title {
-    font-size: 1.3rem;
-  }
-
-  .settings-btn {
-    padding: 10px 20px;
-    min-width: 100px;
-    font-size: 0.9rem;
-  }
-
-  .settings-dialog-footer {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .settings-btn {
-    width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  .settings-dialog {
-    width: 98%;
-    border-radius: 8px;
-  }
-
-  .settings-dialog-header {
-    padding: 15px;
-  }
-
-  .settings-dialog-content {
-    padding: 20px 15px;
-  }
-
-  .settings-dialog-footer {
-    padding: 15px;
-  }
-}
-
-/* src/components/SettingsDialog.css */
-/* ... keep all existing styles ... */
-
-/* New styles for settings */
+/* More compact setting groups */
 .setting-group {
-  margin-bottom: 30px;
-  padding: 20px;
+  margin-bottom: 20px; /* Reduced spacing */
+  padding: 15px; /* Reduced padding */
   background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 10px;
+  border-radius: 8px;
   border: 1px solid rgba(0, 173, 181, 0.2);
 }
 
@@ -220,52 +119,53 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 12px; /* Reduced */
 }
 
 .setting-title {
   color: #00adb5;
-  font-size: 1.2rem;
+  font-size: 1rem; /* Smaller */
   font-weight: 600;
   margin: 0;
 }
 
 .setting-value-display {
   color: #00ff88;
-  font-size: 1.1rem;
+  font-size: 1rem; /* Smaller */
   font-weight: 600;
   background-color: rgba(0, 255, 136, 0.1);
-  padding: 5px 12px;
-  border-radius: 20px;
+  padding: 4px 10px; /* Smaller */
+  border-radius: 15px;
   border: 1px solid rgba(0, 255, 136, 0.3);
 }
 
 .setting-description {
   color: #aaa;
-  font-size: 0.9rem;
-  margin-top: 10px;
+  font-size: 0.8rem; /* Smaller */
+  margin-top: 8px;
   font-style: italic;
 }
 
-/* Slider styles */
+/* More compact Slider styles */
 .slider-container {
-  margin: 20px 0;
+  margin: 15px 0; /* Reduced */
 }
 
 .slider-labels {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: 6px; /* Reduced */
 }
 
 .slider-label {
   color: #ccc;
-  font-size: 0.85rem;
+  font-size: 0.8rem; /* Smaller */
 }
 
-.speed-slider {
+.speed-slider,
+.target-slider {
   width: 100%;
-  height: 8px;
+  height: 6px; /* Thinner */
   -webkit-appearance: none;
   appearance: none;
   background: linear-gradient(
@@ -275,36 +175,38 @@
     #393e46 var(--slider-percent, 50%),
     #393e46 100%
   );
-  border-radius: 4px;
+  border-radius: 3px;
   outline: none;
 }
 
-.speed-slider::-webkit-slider-thumb {
+.speed-slider::-webkit-slider-thumb,
+.target-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 24px;
-  height: 24px;
+  width: 20px; /* Smaller thumb */
+  height: 20px;
   border-radius: 50%;
   background: #00adb5;
   cursor: pointer;
   border: 2px solid #fff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.speed-slider::-moz-range-thumb {
-  width: 24px;
-  height: 24px;
+.speed-slider::-moz-range-thumb,
+.target-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background: #00adb5;
   cursor: pointer;
   border: 2px solid #fff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .slider-ticks {
   display: flex;
   justify-content: space-between;
-  margin-top: 15px;
+  margin-top: 10px; /* Reduced */
   position: relative;
 }
 
@@ -316,97 +218,33 @@
 }
 
 .tick-line {
-  width: 2px;
-  height: 8px;
+  width: 1px; /* Thinner */
+  height: 6px; /* Shorter */
   background-color: #555;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
 }
 
 .tick-label {
   color: #888;
-  font-size: 0.8rem;
+  font-size: 0.7rem; /* Smaller */
   white-space: nowrap;
 }
 
-/* Number input styles */
-.number-input-container {
-  margin: 20px 0;
-}
-
-.number-input-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.number-input-btn {
-  width: 40px;
-  height: 40px;
-  border: none;
-  border-radius: 8px;
-  background-color: #393e46;
-  color: #fff;
-  font-size: 1.5rem;
-  font-weight: bold;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-}
-
-.number-input-btn:hover:not(:disabled) {
-  background-color: #00adb5;
-  transform: scale(1.05);
-}
-
-.number-input-btn:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-
-.target-score-input {
-  width: 150px;
-  height: 50px;
-  border: 2px solid #00adb5;
-  border-radius: 8px;
-  background-color: rgba(0, 173, 181, 0.1);
-  color: #fff;
-  font-size: 1.3rem;
-  font-weight: bold;
-  text-align: center;
-  outline: none;
-}
-
-.target-score-input:focus {
-  border-color: #00ff88;
-  box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
-}
-
-.input-hint {
-  color: #ffa500;
-  font-size: 0.85rem;
-  text-align: center;
-  margin-top: 5px;
-}
-
-/* Grid options */
+/* More compact Grid options */
 .grid-options {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
-  margin: 20px 0;
+  gap: 10px; /* Reduced gap */
+  margin: 15px 0; /* Reduced */
 }
 
 .grid-option {
   background-color: rgba(255, 255, 255, 0.05);
   border: 2px solid #393e46;
-  border-radius: 10px;
-  padding: 15px;
+  border-radius: 8px;
+  padding: 10px; /* Reduced */
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease; /* Faster transition */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -414,26 +252,26 @@
 
 .grid-option:hover {
   border-color: #00adb5;
-  transform: translateY(-2px);
+  transform: translateY(-1px); /* Smaller lift */
 }
 
 .grid-option.selected {
   border-color: #00ff88;
   background-color: rgba(0, 255, 136, 0.1);
-  box-shadow: 0 4px 12px rgba(0, 255, 136, 0.2);
+  box-shadow: 0 3px 8px rgba(0, 255, 136, 0.2); /* Smaller shadow */
 }
 
 .grid-option-size {
   color: #fff;
-  font-size: 1.1rem;
+  font-size: 0.9rem; /* Smaller */
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .grid-option-cells {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 3px;
+  gap: 2px; /* Smaller gap */
   width: 100%;
   aspect-ratio: 1 / 1;
 }
@@ -452,68 +290,150 @@
 
 .grid-cell-preview {
   background-color: rgba(0, 173, 181, 0.3);
-  border-radius: 2px;
+  border-radius: 1px; /* Smaller radius */
 }
 
 .grid-option.selected .grid-cell-preview {
   background-color: rgba(0, 255, 136, 0.5);
 }
 
-/* Responsive Design Updates */
+/* More compact Dialog Footer */
+.settings-dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px; /* Reduced gap */
+  padding: 15px; /* Reduced padding */
+  border-top: 1px solid rgba(0, 173, 181, 0.3);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.settings-btn {
+  padding: 8px 16px; /* Smaller buttons */
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem; /* Smaller font */
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease; /* Faster transition */
+  min-width: 80px; /* Smaller minimum width */
+}
+
+.settings-btn-close {
+  background-color: #393e46;
+  color: #fff;
+}
+
+.settings-btn-close:hover {
+  background-color: #4a4f57;
+  transform: translateY(-1px); /* Smaller lift */
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); /* Smaller shadow */
+}
+
+.settings-btn-save {
+  background-color: #00adb5;
+  color: #fff;
+}
+
+.settings-btn-save:hover {
+  background-color: #00ff88;
+  color: #000;
+  transform: translateY(-1px); /* Smaller lift */
+  box-shadow: 0 3px 6px rgba(0, 255, 136, 0.3); /* Smaller shadow */
+}
+
+/* More compact Responsive Design */
 @media (max-width: 768px) {
-  .setting-group {
-    padding: 15px;
+  .settings-dialog {
+    width: 95%;
+    max-width: 400px;
+    max-height: 90vh;
   }
 
-  .setting-title {
-    font-size: 1.1rem;
+  .settings-dialog-title {
+    font-size: 1.2rem;
   }
 
-  .setting-value-display {
-    font-size: 1rem;
-    padding: 4px 10px;
+  .settings-btn {
+    padding: 7px 14px;
+    min-width: 70px;
+    font-size: 0.85rem;
   }
 
   .grid-options {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 8px;
   }
 
   .grid-option {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 12px;
+    padding: 8px;
   }
 
   .grid-option-size {
     margin-bottom: 0;
-    margin-right: 15px;
+    margin-right: 10px;
+    font-size: 0.85rem;
   }
 
   .grid-option-cells {
-    width: 60px;
-    height: 60px;
+    width: 50px; /* Smaller preview */
+    height: 50px;
   }
 }
 
 @media (max-width: 480px) {
-  .setting-group {
-    padding: 12px;
+  .settings-dialog {
+    width: 98%;
+    border-radius: 8px;
+    max-width: 350px;
   }
 
-  .setting-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
+  .settings-dialog-header {
+    padding: 12px 15px;
+  }
+
+  .settings-dialog-title {
+    font-size: 1.1rem;
+  }
+
+  .close-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .settings-dialog-content {
+    padding: 12px 15px;
+  }
+
+  .setting-group {
+    padding: 12px;
+    margin-bottom: 15px;
+  }
+
+  .setting-title {
+    font-size: 0.95rem;
   }
 
   .setting-value-display {
-    align-self: flex-start;
+    font-size: 0.9rem;
+    padding: 3px 8px;
+  }
+
+  .settings-dialog-footer {
+    padding: 12px;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .settings-btn {
+    width: 100%;
+    padding: 9px;
   }
 
   .grid-option-cells {
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
   }
 }

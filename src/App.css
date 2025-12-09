@@ -107,6 +107,54 @@ body {
   white-space: nowrap;
 }
 
+/* Grid size display */
+.grid-size-display {
+  font-size: calc(1.2rem + 0.6vh);
+  font-weight: bold;
+  color: #00ff88;
+  text-shadow: 0 0 6px rgba(0, 255, 136, 0.5);
+  margin: 0.2vh 0;
+  line-height: 1;
+}
+
+.grid-size-text {
+  color: #aaa;
+  font-size: calc(0.5rem + 0.2vh);
+  margin-top: 0.2vh;
+}
+
+/* Speed display */
+.speed-display {
+  font-size: calc(1.2rem + 0.6vh);
+  font-weight: bold;
+  color: #00ff88;
+  text-shadow: 0 0 6px rgba(0, 255, 136, 0.5);
+  margin: 0.2vh 0;
+  line-height: 1;
+}
+
+.speed-text {
+  color: #aaa;
+  font-size: calc(0.5rem + 0.2vh);
+  margin-top: 0.2vh;
+}
+
+/* Target score display */
+.target-score-display {
+  font-size: calc(1.2rem + 0.6vh);
+  font-weight: bold;
+  color: #00ff88;
+  text-shadow: 0 0 6px rgba(0, 255, 136, 0.5);
+  margin: 0.2vh 0;
+  line-height: 1;
+}
+
+.target-text {
+  color: #aaa;
+  font-size: calc(0.5rem + 0.2vh);
+  margin-top: 0.2vh;
+}
+
 .level-display {
   font-size: calc(1.2rem + 0.6vh);
   font-weight: bold;

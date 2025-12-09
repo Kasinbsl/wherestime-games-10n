@@ -1,26 +1,29 @@
-// src/components/SettingsDialog.jsx
 import React, { useState, useEffect } from "react";
 import "./SettingsDialog.css";
 
 const SettingsDialog = ({ isOpen, onClose, onSave, initialSettings = {} }) => {
   const [settings, setSettings] = useState({
-    gameSpeed: 1000, // milliseconds between new numbers
-    targetScore: 500, // target score
-    gridSize: 6, // grid size (4, 5, or 6)
+    gridSize: 6,
+    gameSpeed: 1000,
+    targetScore: 500,
   });
 
   // Initialize with provided settings
   useEffect(() => {
     if (isOpen && initialSettings) {
       setSettings({
+        gridSize: initialSettings.gridSize || 6,
         gameSpeed: initialSettings.gameSpeed || 1000,
         targetScore: initialSettings.targetScore || 500,
-        gridSize: initialSettings.gridSize || 6,
       });
     }
   }, [isOpen, initialSettings]);
 
   if (!isOpen) return null;
+
+  const handleGridSizeChange = (size) => {
+    setSettings((prev) => ({ ...prev, gridSize: size }));
+  };
 
   const handleSpeedChange = (e) => {
     const value = parseInt(e.target.value);
@@ -28,15 +31,8 @@ const SettingsDialog = ({ isOpen, onClose, onSave, initialSettings = {} }) => {
   };
 
   const handleTargetScoreChange = (e) => {
-    let value = parseInt(e.target.value);
-    // Ensure it's a multiple of 10
-    if (value < 200) value = 200;
-    value = Math.round(value / 10) * 10; // Round to nearest multiple of 10
+    const value = parseInt(e.target.value);
     setSettings((prev) => ({ ...prev, targetScore: value }));
-  };
-
-  const handleGridSizeChange = (size) => {
-    setSettings((prev) => ({ ...prev, gridSize: size }));
   };
 
   const handleSave = () => {
@@ -48,8 +44,11 @@ const SettingsDialog = ({ isOpen, onClose, onSave, initialSettings = {} }) => {
     return (ms / 1000).toFixed(2);
   };
 
-  // Calculate percentage for slider (300ms to 1500ms)
+  // Calculate percentage for speed slider (300ms to 1500ms)
   const speedPercentage = ((settings.gameSpeed - 300) / (1500 - 300)) * 100;
+
+  // Calculate percentage for target score slider (200 to 10000)
+  const targetPercentage = ((settings.targetScore - 200) / (10000 - 200)) * 100;
 
   return (
     <div className="settings-dialog-overlay" onClick={onClose}>
@@ -64,9 +63,46 @@ const SettingsDialog = ({ isOpen, onClose, onSave, initialSettings = {} }) => {
           </button>
         </div>
 
-        {/* Dialog Content */}
+        {/* Dialog Content - REORDERED as requested */}
         <div className="settings-dialog-content">
-          {/* Game Speed Setting */}
+          {/* 1. Grid Size Setting - FIRST as requested */}
+          <div className="setting-group">
+            <div className="setting-header">
+              <h3 className="setting-title">Grid Size</h3>
+              <div className="setting-value-display">
+                {settings.gridSize} × {settings.gridSize}
+              </div>
+            </div>
+
+            <div className="grid-options">
+              {[4, 5, 6].map((size) => (
+                <button
+                  key={size}
+                  className={`grid-option ${
+                    settings.gridSize === size ? "selected" : ""
+                  }`}
+                  onClick={() => handleGridSizeChange(size)}
+                >
+                  <div className="grid-option-size">
+                    {size} × {size}
+                  </div>
+                  <div className="grid-option-cells">
+                    {Array(size * size)
+                      .fill(0)
+                      .map((_, i) => (
+                        <div key={i} className="grid-cell-preview"></div>
+                      ))}
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            <div className="setting-description">
+              Size of the game board (affects difficulty)
+            </div>
+          </div>
+
+          {/* 2. Game Speed Setting - SECOND as requested */}
           <div className="setting-group">
             <div className="setting-header">
               <h3 className="setting-title">New Number Speed</h3>
@@ -109,7 +145,7 @@ const SettingsDialog = ({ isOpen, onClose, onSave, initialSettings = {} }) => {
             </div>
           </div>
 
-          {/* Target Score Setting */}
+          {/* 3. Target Score Setting - THIRD as requested with slider */}
           <div className="setting-group">
             <div className="setting-header">
               <h3 className="setting-title">Target Score</h3>
@@ -118,83 +154,37 @@ const SettingsDialog = ({ isOpen, onClose, onSave, initialSettings = {} }) => {
               </div>
             </div>
 
-            <div className="number-input-container">
-              <div className="number-input-wrapper">
-                <button
-                  className="number-input-btn minus-btn"
-                  onClick={() => {
-                    const newValue = Math.max(200, settings.targetScore - 10);
-                    setSettings((prev) => ({ ...prev, targetScore: newValue }));
-                  }}
-                  disabled={settings.targetScore <= 200}
-                >
-                  −
-                </button>
-
-                <input
-                  type="number"
-                  min="200"
-                  step="10"
-                  value={settings.targetScore}
-                  onChange={handleTargetScoreChange}
-                  className="target-score-input"
-                />
-
-                <button
-                  className="number-input-btn plus-btn"
-                  onClick={() => {
-                    const newValue = settings.targetScore + 10;
-                    setSettings((prev) => ({ ...prev, targetScore: newValue }));
-                  }}
-                >
-                  +
-                </button>
+            <div className="slider-container">
+              <div className="slider-labels">
+                <span className="slider-label">Easy (200)</span>
+                <span className="slider-label">Hard (10,000)</span>
               </div>
 
-              <div className="input-hint">
-                Must be a multiple of 10 (min: 200)
+              <input
+                type="range"
+                min="200"
+                max="10000"
+                step="100"
+                value={settings.targetScore}
+                onChange={handleTargetScoreChange}
+                className="target-slider"
+                style={{ "--slider-percent": `${targetPercentage}%` }}
+              />
+
+              <div className="slider-ticks">
+                {[200, 2600, 5000, 7400, 10000].map((tick) => (
+                  <div key={tick} className="slider-tick">
+                    <div className="tick-line"></div>
+                    <span className="tick-label">
+                      {tick >= 1000 ? `${tick / 1000}k` : tick}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
 
             <div className="setting-description">
               Score needed to complete the level
-            </div>
-          </div>
-
-          {/* Grid Size Setting */}
-          <div className="setting-group">
-            <div className="setting-header">
-              <h3 className="setting-title">Grid Size</h3>
-              <div className="setting-value-display">
-                {settings.gridSize} × {settings.gridSize}
-              </div>
-            </div>
-
-            <div className="grid-options">
-              {[4, 5, 6].map((size) => (
-                <button
-                  key={size}
-                  className={`grid-option ${
-                    settings.gridSize === size ? "selected" : ""
-                  }`}
-                  onClick={() => handleGridSizeChange(size)}
-                >
-                  <div className="grid-option-size">
-                    {size} × {size}
-                  </div>
-                  <div className="grid-option-cells">
-                    {Array(size * size)
-                      .fill(0)
-                      .map((_, i) => (
-                        <div key={i} className="grid-cell-preview"></div>
-                      ))}
-                  </div>
-                </button>
-              ))}
-            </div>
-
-            <div className="setting-description">
-              Size of the game board (affects difficulty)
             </div>
           </div>
         </div>

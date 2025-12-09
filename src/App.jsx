@@ -384,21 +384,37 @@ function App() {
       <header className="game-header" ref={section1Ref}>
         <div className="header-top-row">
           <h1 className="game-title">10n</h1>
+
           <div className="game-info">
             <div className="info-panel">
               <div className="info-content">
-                <span className="info-label">Level</span>
-                <div className="level-display">{currentLevel}</div>
-                <span className="target-score">
-                  Target: {gameSettings.targetScore}
+                <span className="info-label">Grid Size</span>
+                <div className="grid-size-display">
+                  {gameSettings.gridSize} × {gameSettings.gridSize}
+                </div>
+                <span className="grid-size-text">
+                  {gameSettings.gridSize * gameSettings.gridSize} cells
                 </span>
               </div>
             </div>
+
             <div className="info-panel">
               <div className="info-content">
-                <span className="info-label">Score</span>
-                <div className="score-display">{currentScore}</div>
-                <span className="best-score">Best: {bestScore}</span>
+                <span className="info-label">Speed</span>
+                <div className="speed-display">
+                  {(gameSettings.gameSpeed / 1000).toFixed(2)}s
+                </div>
+                <span className="speed-text">per number</span>
+              </div>
+            </div>
+
+            <div className="info-panel">
+              <div className="info-content">
+                <span className="info-label">Target Score</span>
+                <div className="target-score-display">
+                  {gameSettings.targetScore}
+                </div>
+                <span className="target-text">to win</span>
               </div>
             </div>
           </div>
