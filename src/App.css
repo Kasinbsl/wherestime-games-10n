@@ -151,6 +151,7 @@ body {
 .game-controls {
   display: flex;
   gap: 2vw; /* Increased gap since we removed stop button */
+  align-items: center;
 }
 
 .control-btn {
@@ -166,6 +167,8 @@ body {
   background-color: #393e46;
   color: white;
   flex-shrink: 0;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .control-btn:hover:not(:disabled) {
@@ -191,6 +194,13 @@ body {
 
 .start-btn:disabled {
   background-color: #00adb5; /* Keep same color when disabled */
+  opacity: 0.6; /* Make it visually disabled */
+  cursor: not-allowed; /* Show disabled cursor */
+}
+
+.start-btn:disabled:hover {
+  transform: none; /* Remove hover effect */
+  box-shadow: none; /* Remove hover shadow */
 }
 
 .deselect-btn {
@@ -207,6 +217,16 @@ body {
 }
 
 .pause-btn:not(:disabled):hover {
+  background-color: #8a2be2;
+  box-shadow: 0 0 12px rgba(138, 43, 226, 0.6);
+}
+
+/* Add this with your other control button styles */
+.settings-btn {
+  background-color: #6a11cb;
+}
+
+.settings-btn:not(:disabled):hover {
   background-color: #8a2be2;
   box-shadow: 0 0 12px rgba(138, 43, 226, 0.6);
 }
@@ -280,6 +300,7 @@ body {
   font-weight: bold;
   color: #eeeeee;
   user-select: none;
+  -webkit-tap-highlight-color: transparent;
   min-width: 0;
   min-height: 0;
   aspect-ratio: 1 / 1;
@@ -578,7 +599,9 @@ body {
   }
 
   .game-controls {
-    gap: 2vw;
+    display: flex;
+    gap: 2vw; /* This should apply equally to all buttons */
+    align-items: center; /* Ensure vertical alignment */
   }
 
   .control-btn {
@@ -700,6 +723,11 @@ body {
     width: calc(1.6rem + 0.8vh);
     height: calc(1.6rem + 0.8vh);
     border-radius: 6px;
+  }
+
+  .button-icon {
+    width: calc(0.7rem + 0.4vh);
+    height: calc(0.7rem + 0.4vh);
   }
 
   .board-container {
@@ -846,5 +874,39 @@ body {
 @supports (height: 100dvh) {
   .app {
     height: 100dvh;
+  }
+}
+
+/* Nuclear option to force all control buttons equal */
+.control-btn.settings-btn,
+.control-btn.start-btn,
+.control-btn.deselect-btn,
+.control-btn.pause-btn {
+  width: calc(2rem + 1vh) !important;
+  height: calc(2rem + 1vh) !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* For responsive sizes */
+@media (max-width: 768px) {
+  .control-btn.settings-btn,
+  .control-btn.start-btn,
+  .control-btn.deselect-btn,
+  .control-btn.pause-btn {
+    width: calc(1.8rem + 0.9vh) !important;
+    height: calc(1.8rem + 0.9vh) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .control-btn.settings-btn,
+  .control-btn.start-btn,
+  .control-btn.deselect-btn,
+  .control-btn.pause-btn {
+    width: calc(1.6rem + 0.8vh) !important;
+    height: calc(1.6rem + 0.8vh) !important;
   }
 }

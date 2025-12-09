@@ -3,11 +3,45 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- This single viewport tag disables zoom -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    
+    <meta name="theme-color" content="#1a1a2e" />
+    <meta name="description" content="10n Game - Match numbers that sum to multiple of 10" />
+    
     <title>10n</title>
+
+    <style>
+      /* Basic reset */
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        overflow: hidden; /* Prevents scrollbars */
+      }
+      
+      #root {
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+      }
+      
+      /* Prevent text selection on game elements */
+      .grid-cell, .cell-value, .control-btn {
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+    </style>
   </head>
   <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    
     <script type="module" src="/src/main.jsx"></script>
+    
+    <!-- Optional: Only include if you really need it -->
+    <!-- <script src="/preventPullToRefresh.js"></script> -->
   </body>
 </html>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import SettingsDialog from "./components/SettingsDialog";
 import "./App.css";
 
 // Import button images
@@ -21,6 +22,12 @@ const PauseIcon = () => (
   </svg>
 );
 
+const SettingsIcon = () => (
+  <svg className="button-icon" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" />
+  </svg>
+);
+
 function App() {
   // Game state
   const [gameStarted, setGameStarted] = useState(false);
@@ -30,8 +37,6 @@ function App() {
   const [currentLevel, setCurrentLevel] = useState(1);
   const [currentScore, setCurrentScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
-  const [gridSize, setGridSize] = useState(6);
-  const [targetScore, setTargetScore] = useState(500);
   const [gridCells, setGridCells] = useState([]);
   const [selectedCells, setSelectedCells] = useState(new Set());
   const [gameMessage, setGameMessage] = useState("Click Start to begin!");
@@ -39,6 +44,12 @@ function App() {
   const [gridDimensions, setGridDimensions] = useState({ width: 0, height: 0 });
   const [viewportHeight, setViewportHeight] = useState(0);
   const [adHeight, setAdHeight] = useState(90);
+  const [showSettings, setShowSettings] = useState(false);
+  const [gameSettings, setGameSettings] = useState({
+    gameSpeed: 1000, // Default: 1 second
+    targetScore: 500, // Default target
+    gridSize: 6, // Default grid size
+  });
 
   // Refs
   const section1Ref = useRef(null);
@@ -58,11 +69,11 @@ function App() {
     if (gridHeight <= 0) return;
 
     // Calculate cell height and font size (80% of cell height)
-    const cellHeight = gridHeight / gridSize;
+    const cellHeight = gridHeight / gameSettings.gridSize;
     const fontSize = cellHeight * 0.7; // adjust fontSize
 
     setCellFontSize(`${fontSize}px`);
-  }, [gridSize]);
+  }, [gameSettings.gridSize]);
 
   // Set up ResizeObserver for grid container
   useEffect(() => {
@@ -163,11 +174,11 @@ function App() {
     updateGridDimensions();
     window.addEventListener("resize", updateGridDimensions);
     return () => window.removeEventListener("resize", updateGridDimensions);
-  }, [gridSize]);
+  }, [gameSettings.gridSize]);
 
   // Initialize grid
   useEffect(() => {
-    const size = gridSize;
+    const size = gameSettings.gridSize;
     const cells = [];
 
     for (let i = 0; i < size * size; i++) {
@@ -182,7 +193,7 @@ function App() {
     setSelectedCells(new Set());
     setGameMessage("Click Start to begin!");
     setGamePaused(false);
-  }, [gridSize]);
+  }, [gameSettings.gridSize]);
 
   // Game timer
   useEffect(() => {
@@ -203,7 +214,7 @@ function App() {
             return cell;
           });
         });
-      }, 1000);
+      }, gameSettings.gameSpeed);
 
       return () => {
         if (gameIntervalRef.current) {
@@ -211,13 +222,13 @@ function App() {
         }
       };
     }
-  }, [gameStarted, gameOver, gameWon, gamePaused]);
+  }, [gameStarted, gameOver, gameWon, gamePaused, gameSettings.gameSpeed]);
 
   // Check win/lose conditions
   useEffect(() => {
     if (!gameStarted || gamePaused) return;
 
-    if (currentScore >= targetScore) {
+    if (currentScore >= gameSettings.targetScore) {
       setGameWon(true);
       setGameOver(true);
       setGameMessage(
@@ -241,10 +252,18 @@ function App() {
 
     const progress = Math.min(
       100,
-      Math.floor((currentScore / targetScore) * 100)
+      Math.floor((currentScore / gameSettings.targetScore) * 100)
     );
-    setGameMessage(`Progress: ${progress}% (${currentScore}/${targetScore})`);
-  }, [currentScore, targetScore, gridCells, gameStarted, gamePaused]);
+    setGameMessage(
+      `Progress: ${progress}% (${currentScore}/${gameSettings.targetScore})`
+    );
+  }, [
+    currentScore,
+    gameSettings.targetScore,
+    gridCells,
+    gameStarted,
+    gamePaused,
+  ]);
 
   // Cell click handler
   const handleCellClick = (id) => {
@@ -304,7 +323,7 @@ function App() {
       setGameStarted(true);
       setGameMessage("Game resumed! Select cells that sum to 10!");
     } else {
-      const size = gridSize;
+      const size = gameSettings.gridSize;
       const newCells = [];
 
       for (let i = 0; i < size * size; i++) {
@@ -346,6 +365,20 @@ function App() {
 
   const isPauseEnabled = gameStarted && !gameOver && !gameWon && !gamePaused;
 
+  // Add these handler functions (inside the App function, before return)
+  const handleOpenSettings = () => {
+    setShowSettings(true);
+  };
+
+  const handleCloseSettings = () => {
+    setShowSettings(false);
+  };
+
+  const handleSaveSettings = (newSettings) => {
+    setGameSettings(newSettings);
+    setShowSettings(false);
+  };
+
   return (
     <div className="app">
       <header className="game-header" ref={section1Ref}>
@@ -356,7 +389,9 @@ function App() {
               <div className="info-content">
                 <span className="info-label">Level</span>
                 <div className="level-display">{currentLevel}</div>
-                <span className="target-score">Target: {targetScore}</span>
+                <span className="target-score">
+                  Target: {gameSettings.targetScore}
+                </span>
               </div>
             </div>
             <div className="info-panel">
@@ -376,6 +411,7 @@ function App() {
                 gameStarted && !gameOver && !gamePaused ? "active" : ""
               }`}
               onClick={handleStartGame}
+              disabled={gameStarted && !gameOver && !gamePaused} // ADD THIS LINE
               title={gamePaused ? "Resume Game" : "Start Game"}
             >
               <PlayIcon />
@@ -403,6 +439,15 @@ function App() {
             >
               <PauseIcon />
             </button>
+
+            <button
+              className="control-btn settings-btn"
+              onClick={handleOpenSettings}
+              disabled={isPauseEnabled} // Same as Start button: disabled when game is running
+              title="Game Settings"
+            >
+              <SettingsIcon />
+            </button>
           </div>
         </div>
       </header>
@@ -415,8 +460,8 @@ function App() {
                 className="grid-container"
                 ref={gridContainerRef}
                 style={{
-                  gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
-                  gridTemplateRows: `repeat(${gridSize}, 1fr)`,
+                  gridTemplateColumns: `repeat(${gameSettings.gridSize}, 1fr)`,
+                  gridTemplateRows: `repeat(${gameSettings.gridSize}, 1fr)`,
                   width: `${gridDimensions.width}px`,
                   height: `${gridDimensions.height}px`,
                 }}
@@ -467,6 +512,14 @@ function App() {
           </div>
         </div>
       </footer>
+
+      {/* Add this at the end of your JSX, before the final closing </div> */}
+      <SettingsDialog
+        isOpen={showSettings}
+        onClose={handleCloseSettings}
+        onSave={handleSaveSettings}
+        initialSettings={gameSettings}
+      />
     </div>
   );
 }
