@@ -1,0 +1,537 @@
+/* Compact Congratulations Dialog Styles */
+.congrats-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  backdrop-filter: blur(3px);
+  animation: fadeIn 0.2s ease-out;
+  padding: 10px;
+}
+
+.congrats-dialog.compact {
+  background: linear-gradient(145deg, #1a1a2e 0%, #0f3460 100%);
+  border-radius: 16px;
+  border: 3px solid #00adb5;
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  animation: slideUpCompact 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes slideUpCompact {
+  from {
+    transform: translateY(20px) scale(0.98);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.congrats-dialog-header.compact {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: rgba(0, 173, 181, 0.15);
+  border-bottom: 2px solid rgba(0, 173, 181, 0.3);
+}
+
+.congrats-header-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.congrats-dialog-title {
+  color: #00ff88;
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-shadow: 0 2px 6px rgba(0, 255, 136, 0.4);
+}
+
+.congrats-emoji {
+  font-size: 1.4rem;
+  animation: bounceEmoji 1s ease infinite;
+}
+
+@keyframes bounceEmoji {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.new-record-badge {
+  background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 12px;
+  display: inline-block;
+  width: fit-content;
+  animation: pulseCompact 1.5s infinite;
+}
+
+@keyframes pulseCompact {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+}
+
+.congrats-dialog-close-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.congrats-dialog-close-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.close-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.congrats-dialog-content.compact {
+  padding: 20px 24px;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Main Score Display */
+.main-score-display {
+  text-align: center;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  border: 2px solid rgba(0, 173, 181, 0.2);
+}
+
+.score-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.score-label {
+  color: #aaa;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.score-value {
+  color: #00ff88;
+  font-size: 2.8rem;
+  font-weight: 900;
+  text-shadow: 0 0 12px rgba(0, 255, 136, 0.5);
+  line-height: 1;
+}
+
+.score-multiplier {
+  color: #00adb5;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: rgba(0, 173, 181, 0.1);
+  padding: 4px 12px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Settings Summary */
+.settings-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 173, 181, 0.1);
+}
+
+.setting-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.setting-label {
+  color: #888;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.setting-value {
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+/* Best Score Comparison */
+.best-score-comparison.compact {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+  padding: 16px;
+  border: 2px solid rgba(255, 215, 0, 0.15);
+}
+
+.comparison-title {
+  color: #ffd700;
+  font-size: 1.1rem;
+  margin: 0 0 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.trophy-icon {
+  font-size: 1.2rem;
+}
+
+.comparison-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.score-comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+}
+
+.score-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.score-type {
+  color: #ccc;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.score-amount {
+  font-size: 1.4rem;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 6px;
+  position: relative;
+}
+
+.score-amount.previous {
+  color: #ff8e8e;
+  background: rgba(255, 142, 142, 0.1);
+}
+
+.score-amount.current {
+  color: #00ff88;
+  background: rgba(0, 255, 136, 0.1);
+}
+
+.score-amount.current.new-record {
+  padding-right: 24px;
+}
+
+.up-arrow {
+  position: absolute;
+  right: 6px;
+  color: #ff6b6b;
+  font-size: 1rem;
+  animation: floatUp 1s ease-in-out infinite;
+}
+
+@keyframes floatUp {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+.score-arrow {
+  color: #00adb5;
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.first-time-message {
+  text-align: center;
+  padding: 12px;
+  background: rgba(255, 215, 0, 0.1);
+  border-radius: 8px;
+  color: #ffd700;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.improvement-message {
+  text-align: center;
+  padding: 8px 12px;
+  background: rgba(0, 173, 181, 0.1);
+  border-radius: 8px;
+  color: #00adb5;
+  font-weight: 600;
+  font-size: 0.9rem;
+  animation: fadeInUp 0.5s ease;
+}
+
+.improvement-amount {
+  color: #00ff88;
+  font-weight: 800;
+}
+
+/* Quick Tip */
+.quick-tip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: rgba(0, 173, 181, 0.08);
+  border-radius: 8px;
+  border: 1px dashed rgba(0, 173, 181, 0.3);
+  color: #00adb5;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.tip-icon {
+  font-size: 1.1rem;
+}
+
+/* Compact Footer */
+.congrats-dialog-footer.compact {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: rgba(255, 255, 255, 0.05);
+  border-top: 2px solid rgba(0, 173, 181, 0.2);
+  gap: 12px;
+}
+
+.congrats-btn.compact-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+  min-height: 44px;
+}
+
+.congrats-btn.compact-btn:not(.primary) {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.congrats-btn.compact-btn:not(.primary):hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.congrats-btn.compact-btn.primary {
+  background: linear-gradient(45deg, #00adb5, #00ff88);
+  color: #000;
+  border: none;
+}
+
+.congrats-btn.compact-btn.primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 255, 136, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .congrats-dialog.compact {
+    width: 95%;
+    max-height: 85vh;
+    border-radius: 14px;
+  }
+
+  .congrats-dialog-header.compact {
+    padding: 14px 20px;
+  }
+
+  .congrats-dialog-title {
+    font-size: 1.4rem;
+  }
+
+  .congrats-dialog-content.compact {
+    padding: 16px 20px;
+    gap: 16px;
+  }
+
+  .score-value {
+    font-size: 2.4rem;
+  }
+
+  .settings-summary {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .setting-value {
+    font-size: 1rem;
+  }
+
+  .best-score-comparison.compact {
+    padding: 14px;
+  }
+
+  .score-amount {
+    font-size: 1.2rem;
+  }
+
+  .congrats-dialog-footer.compact {
+    padding: 14px 20px;
+  }
+
+  .congrats-btn.compact-btn {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .congrats-dialog.compact {
+    width: 98%;
+    max-width: 400px;
+    border-radius: 12px;
+  }
+
+  .congrats-dialog-title {
+    font-size: 1.3rem;
+  }
+
+  .congrats-emoji {
+    font-size: 1.2rem;
+  }
+
+  .score-value {
+    font-size: 2.2rem;
+  }
+
+  .settings-summary {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .setting-item {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 6px 0;
+  }
+
+  .setting-item:not(:last-child) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .score-comparison-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 8px;
+  }
+
+  .score-arrow {
+    transform: rotate(90deg);
+    font-size: 1.2rem;
+  }
+
+  .quick-tip {
+    font-size: 0.85rem;
+    padding: 10px 12px;
+  }
+
+  .congrats-dialog-footer.compact {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+/* Animation for score display */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.main-score-display,
+.settings-summary,
+.best-score-comparison.compact,
+.quick-tip {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.main-score-display {
+  animation-delay: 0.1s;
+}
+.settings-summary {
+  animation-delay: 0.2s;
+}
+.best-score-comparison.compact {
+  animation-delay: 0.3s;
+}
+.quick-tip {
+  animation-delay: 0.4s;
+}

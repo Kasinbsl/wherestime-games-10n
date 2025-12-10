@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import SettingsDialog from "./components/SettingsDialog";
 import HelpDialog from "./components/HelpDialog";
+import CongratulationsDialog from "./components/CongratulationsDialog";
 import { getTranslations, availableLanguages } from "./locales";
 import "./App.css";
 
@@ -65,6 +66,7 @@ function App() {
     gridSize: 6, // Default grid size
   });
   const [showHelp, setShowHelp] = useState(false);
+  const [showCongratulations, setShowCongratulations] = useState(false);
   // Add language state
   const [language, setLanguage] = useState("en");
   const t = getTranslations(language);
@@ -251,12 +253,17 @@ function App() {
       setGamePaused(false);
       setGameWon(true);
       setGameOver(true);
-      setGameMessage(
-        "Great job! Level completed! 🏆 Click Start for next challenge!"
-      );
+      setGameMessage("Great job! Level completed! 🏆");
+
       if (gameIntervalRef.current) {
         clearInterval(gameIntervalRef.current);
       }
+
+      // Show congratulations dialog after a short delay
+      setTimeout(() => {
+        setShowCongratulations(true);
+      }, 500);
+
       return;
     }
 
@@ -421,6 +428,33 @@ function App() {
 
   const handleCloseHelp = () => {
     setShowHelp(false);
+  };
+
+  // Add handler functions for congratulation dialog
+  const handleCloseCongratulations = () => {
+    setShowCongratulations(false);
+  };
+
+  const handleNewGame = () => {
+    setShowCongratulations(false);
+    // Reset game state
+    const size = gameSettings.gridSize;
+    const newCells = [];
+    for (let i = 0; i < size * size; i++) {
+      newCells.push({
+        id: i,
+        value: null,
+        active: false,
+      });
+    }
+    setGridCells(newCells);
+    setGameStarted(false);
+    setGameOver(false);
+    setGameWon(false);
+    setGamePaused(false);
+    setCurrentScore(0);
+    setSelectedCells(new Set());
+    setGameMessage("Click Start to begin!");
   };
 
   return (
@@ -613,6 +647,19 @@ function App() {
 
       {/* Help Dialog */}
       <HelpDialog isOpen={showHelp} onClose={handleCloseHelp} />
+
+      {/* Congratulations Dialog */}
+      <CongratulationsDialog
+        isOpen={showCongratulations}
+        onClose={handleCloseCongratulations}
+        onNewGame={handleNewGame}
+        currentScore={currentScore}
+        targetScore={gameSettings.targetScore}
+        gridSize={gameSettings.gridSize}
+        speed={gameSettings.gameSpeed}
+      />
+
+      {/* The last Div */}
     </div>
   );
 }
