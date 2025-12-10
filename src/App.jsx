@@ -34,6 +34,12 @@ const HelpIcon = () => (
   </svg>
 );
 
+const HomeIcon = () => (
+  <svg className="button-icon" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+  </svg>
+);
+
 function App() {
   // Game state
   const [gameStarted, setGameStarted] = useState(false);
@@ -398,6 +404,34 @@ function App() {
     );
   };
 
+  // Add a handler function for the Home button
+  const handleHome = () => {
+    // For now, just restart the game with default settings
+    if (gameIntervalRef.current) {
+      clearInterval(gameIntervalRef.current);
+    }
+
+    setGameStarted(false);
+    setGameOver(false);
+    setGameWon(false);
+    setGamePaused(false);
+    setCurrentScore(0);
+    setSelectedCells(new Set());
+    setGameMessage("Welcome to 10n! Click Start to begin!");
+
+    // Reset grid
+    const size = gameSettings.gridSize;
+    const newCells = [];
+    for (let i = 0; i < size * size; i++) {
+      newCells.push({
+        id: i,
+        value: null,
+        active: false,
+      });
+    }
+    setGridCells(newCells);
+  };
+
   return (
     <div className="app">
       <header className="game-header" ref={section1Ref}>
@@ -439,8 +473,20 @@ function App() {
           </div>
         </div>
 
+        {/* Update the header-controls-row section in the App.jsx: */}
         <div className="header-controls-row">
-          <div className="controls-container">
+          <div className="controls-wrapper">
+            {/* Home button - left aligned */}
+            <div className="left-controls">
+              <button
+                className="control-btn home-btn"
+                onClick={handleHome}
+                title="Home / Restart"
+              >
+                <HomeIcon />
+              </button>
+            </div>
+
             {/* Game controls - centered */}
             <div className="game-controls">
               <button
@@ -478,8 +524,7 @@ function App() {
               </button>
             </div>
 
-            {/* Help & Settings buttons - right aligned --- begin */}
-
+            {/* Utility controls - right aligned */}
             <div className="utility-controls">
               <button
                 className="control-btn help-btn"
@@ -498,8 +543,6 @@ function App() {
                 <SettingsIcon />
               </button>
             </div>
-
-            {/* Help & Settings buttons - right aligned --- end */}
           </div>
         </div>
       </header>

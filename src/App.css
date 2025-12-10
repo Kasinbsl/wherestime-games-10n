@@ -37,7 +37,7 @@ body {
   bottom: 0;
 }
 
-/* ===== HEADER STYLES ===== */
+/* ===== GAME HEADER - SIMPLIFIED FOR ALL SCREENS ===== */
 
 /* Section 1: Game Header (20% of available height) */
 .game-header {
@@ -46,17 +46,19 @@ body {
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
+  justify-content: space-between; /* Space rows evenly */
   overflow: hidden;
   min-height: 0;
   padding: 1.5vh 2vw 1.2vh 2vw;
+  min-height: 20vh; /* Minimum height for all screens */
 }
 
-/* Top Row: Title and Game Info (55% of Section 1 height) */
+/* Top Row: Title and Game Info */
 .header-top-row {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  height: 55%;
+  flex: 0 0 auto; /* Don't grow or shrink, size to content */
   min-height: 0;
   padding-top: 0.8vh;
   margin-bottom: 0.3vh;
@@ -160,42 +162,56 @@ body {
   margin-top: 0.1vh;
 }
 
-/* Controls Row (45% of Section 1 height) */
+/* ===== CONTROLS ROW - SIMPLIFIED FOR ALL SCREENS ===== */
+
+/* Controls Row */
 .header-controls-row {
   display: flex;
   align-items: flex-end;
-  height: 45%;
+  flex: 0 0 auto; /* Don't grow or shrink, size to content */
   min-height: 0;
   padding-bottom: 1vh;
-  position: relative;
 }
 
-/* Main controls container - SIMPLIFIED FIX */
-.controls-container {
-  display: flex;
+/* Controls wrapper - PERFECT 3-column grid */
+.controls-wrapper {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr; /* Equal left and right columns */
   width: 100%;
-  justify-content: space-between;
   align-items: center;
-  min-height: calc(2rem + 1vh);
+  justify-items: center;
+  height: 100%;
 }
 
-/* Game controls - centered using flex */
+/* Left controls - Home button positioned in left column */
+.left-controls {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  padding-left: 1vw;
+}
+
+/* Game controls - PERFECTLY centered in middle column */
 .game-controls {
   display: flex;
   gap: 2vw;
   align-items: center;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  justify-content: center;
+  grid-column: 2; /* Place in middle column */
 }
 
-/* Utility controls - right aligned */
+/* Utility controls - positioned in right column */
 .utility-controls {
   display: flex;
   gap: 1vw;
   align-items: center;
-  margin-left: auto;
+  justify-content: flex-end;
+  width: 100%;
+  padding-right: 1vw;
+  grid-column: 3; /* Place in right column */
 }
+
+/* ===== BUTTON STYLES ===== */
 
 .control-btn {
   width: calc(2rem + 1vh);
@@ -236,14 +252,14 @@ body {
 }
 
 .start-btn:disabled {
-  background-color: #00adb5; /* Keep same color when disabled */
-  opacity: 0.6; /* Make it visually disabled */
-  cursor: not-allowed; /* Show disabled cursor */
+  background-color: #00adb5;
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .start-btn:disabled:hover {
-  transform: none; /* Remove hover effect */
-  box-shadow: none; /* Remove hover shadow */
+  transform: none;
+  box-shadow: none;
 }
 
 .deselect-btn {
@@ -262,6 +278,16 @@ body {
 .pause-btn:not(:disabled):hover {
   background-color: #8a2be2;
   box-shadow: 0 0 12px rgba(138, 43, 226, 0.6);
+}
+
+/* Home button */
+.home-btn {
+  background-color: #ff6b6b;
+}
+
+.home-btn:not(:disabled):hover {
+  background-color: #ff8e8e;
+  box-shadow: 0 0 12px rgba(255, 142, 142, 0.6);
 }
 
 /* Help button */
@@ -295,7 +321,7 @@ body {
   filter: sepia(0.3);
 }
 
-/* ===== GAME BOARD STYLES ===== */
+/* ===== GAME BOARD STYLES (UNCHANGED) ===== */
 
 /* Section 2: Game Board (80% of available height) */
 .game-board {
@@ -516,8 +542,6 @@ body {
   overflow: hidden;
   position: relative;
   z-index: 10; /* Ensure it's above other elements */
-
-  /* Mobile safe area support - SIMPLIFIED FIX */
   padding: 10px 4vw;
   min-height: 90px;
 }
@@ -658,12 +682,17 @@ body {
     padding-bottom: 0.8vh;
   }
 
+  .left-controls {
+    padding-left: 0.5vw;
+  }
+
   .game-controls {
     gap: 1.5vw;
   }
 
   .utility-controls {
     gap: 1vw;
+    padding-right: 0.5vw;
   }
 
   .control-btn {
@@ -730,39 +759,31 @@ body {
   }
 }
 
-/* Mobile (width <= 768px) - FIX ISSUE 1 & 2 */
+/* Mobile (width <= 768px) */
 @media (max-width: 768px) {
   .game-header {
     padding: 1vh 2vw 0.8vh 2vw;
+    min-height: 18vh; /* Slightly smaller on mobile */
   }
 
-  /* FIX 1: Title centered, info panels in second row */
+  /* Keep title on left, info on right */
   .header-top-row {
-    flex-direction: column;
-    align-items: center;
-    gap: 0.8vh;
-    height: auto;
-    margin-bottom: 0.8vh;
     padding-top: 0.5vh;
+    margin-bottom: 0.8vh;
   }
 
   .game-title {
-    text-align: center;
-    margin-left: 0;
-    padding-top: 0;
     font-size: calc(1.2rem + 0.6vh);
-    order: 1;
-    width: 100%;
+    margin-left: 0;
+    padding-top: 0.3vh;
+    flex-shrink: 0;
   }
 
   .game-info {
-    justify-content: center;
-    gap: 1vw;
-    order: 2;
-    width: 100%;
+    gap: 0.6vw;
+    flex-wrap: nowrap;
     overflow-x: auto;
-    padding: 0 1vw;
-    justify-content: center;
+    justify-content: flex-end;
   }
 
   .info-panel {
@@ -791,37 +812,25 @@ body {
     margin-top: 0.08vh;
   }
 
-  /* FIX 2: Controls stay on same row */
   .header-controls-row {
-    height: auto;
-    min-height: calc(2rem + 1vh);
     padding-bottom: 0.8vh;
-    align-items: center;
-  }
-
-  .controls-container {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
     min-height: calc(1.8rem + 0.9vh);
-    gap: 1vw;
   }
 
-  /* Keep game controls centered */
-  .game-controls {
-    position: static;
-    transform: none;
-    flex: 1;
-    justify-content: center;
-    gap: 2vw;
+  /* On mobile, center buttons within their columns */
+  .left-controls {
+    padding-left: 0.5vw;
+    justify-content: flex-start;
   }
 
-  /* Keep utility controls on right */
   .utility-controls {
-    position: static;
-    margin-left: 0;
-    flex-shrink: 0;
+    padding-right: 0.5vw;
+    justify-content: flex-end;
     gap: 1vw;
+  }
+
+  .game-controls {
+    gap: 2vw;
   }
 
   .control-btn {
@@ -886,15 +895,15 @@ body {
   }
 }
 
-/* Small mobile (width <= 480px) - FIX ISSUE 5 */
+/* Small mobile (width <= 480px) */
 @media (max-width: 480px) {
   .game-header {
-    padding: 0.8vh 1.5vw 0.6vh 1.5vw; /* Reduced bottom padding */
+    padding: 0.8vh 1.5vw 0.6vh 1.5vw;
+    min-height: 16vh; /* Even smaller on very small screens */
   }
 
   .header-top-row {
-    gap: 0.4vh;
-    margin-bottom: 0.4vh; /* Reduced margin */
+    margin-bottom: 0.4vh;
     padding-top: 0.3vh;
   }
 
@@ -903,7 +912,7 @@ body {
   }
 
   .game-info {
-    gap: 0.5vw;
+    gap: 0.4vw;
   }
 
   .info-panel {
@@ -931,13 +940,12 @@ body {
     margin-top: 0.05vh;
   }
 
-  /* FIX 5: Reduce bottom spacing */
   .header-controls-row {
-    padding-bottom: 0.4vh; /* Reduced from 0.8vh */
+    padding-bottom: 0.4vh;
     min-height: calc(1.6rem + 0.8vh);
   }
 
-  .controls-container {
+  .controls-wrapper {
     min-height: calc(1.6rem + 0.8vh);
     gap: 0.5vw;
   }
@@ -1017,14 +1025,18 @@ body {
 
 /* Very small mobile (width <= 360px) */
 @media (max-width: 360px) {
-  .game-header {
-    padding: 0.6vh 1vw 0.4vh 1vw;
+  .game-title {
+    font-size: calc(0.9rem + 0.6vh);
   }
 
   .info-panel {
     min-width: 60px;
     max-width: 65px;
     padding: 0.15vh 0.3vw;
+  }
+
+  .controls-wrapper {
+    gap: 0.3vw;
   }
 
   .game-controls {
@@ -1050,6 +1062,7 @@ body {
 @media (max-height: 500px) {
   .game-header {
     padding: 0.6vh 1vw 0.4vh 1vw;
+    min-height: 14vh;
   }
 
   .header-top-row {
@@ -1096,21 +1109,6 @@ body {
   }
 }
 
-/* Desktop (width >= 1024px) - FIX ISSUE 3 */
-@media (min-width: 1024px) {
-  /* Game controls perfectly centered on wide screens */
-  .game-controls {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  /* Utility controls perfectly right aligned */
-  .utility-controls {
-    margin-left: auto;
-  }
-}
-
 /* Mobile browser bottom navigation fix */
 @media (max-width: 768px) {
   .app {
@@ -1133,6 +1131,7 @@ body {
 }
 
 /* Ensure all control buttons have equal dimensions */
+.control-btn.home-btn,
 .control-btn.start-btn,
 .control-btn.deselect-btn,
 .control-btn.pause-btn,
@@ -1148,6 +1147,7 @@ body {
 
 /* Responsive button sizing */
 @media (max-width: 1023px) and (min-width: 769px) {
+  .control-btn.home-btn,
   .control-btn.start-btn,
   .control-btn.deselect-btn,
   .control-btn.pause-btn,
@@ -1159,6 +1159,7 @@ body {
 }
 
 @media (max-width: 768px) {
+  .control-btn.home-btn,
   .control-btn.start-btn,
   .control-btn.deselect-btn,
   .control-btn.pause-btn,
@@ -1170,6 +1171,7 @@ body {
 }
 
 @media (max-width: 480px) {
+  .control-btn.home-btn,
   .control-btn.start-btn,
   .control-btn.deselect-btn,
   .control-btn.pause-btn,
@@ -1181,6 +1183,7 @@ body {
 }
 
 @media (max-width: 360px) {
+  .control-btn.home-btn,
   .control-btn.start-btn,
   .control-btn.deselect-btn,
   .control-btn.pause-btn,
@@ -1188,5 +1191,39 @@ body {
   .control-btn.settings-btn {
     width: calc(1.4rem + 0.7vh) !important;
     height: calc(1.4rem + 0.7vh) !important;
+  }
+}
+
+/* fix info panel size */
+
+/* Make info panels more compact on medium-height screens */
+@media (min-height: 550px) and (max-height: 700px) {
+  .info-panel {
+    padding: 0.25vh 0.4vw !important;
+    min-width: 90px !important;
+    max-width: 100px !important;
+  }
+
+  .info-content {
+    padding: 0.1vh 0 !important;
+  }
+
+  .info-label {
+    font-size: calc(0.4rem + 0.2vh) !important;
+    margin-bottom: 0.1vh !important;
+  }
+
+  .grid-size-display,
+  .speed-display,
+  .target-score-display {
+    font-size: calc(0.95rem + 0.4vh) !important;
+    margin: 0.05vh 0 !important;
+  }
+
+  .grid-size-text,
+  .speed-text,
+  .target-text {
+    font-size: calc(0.4rem + 0.1vh) !important;
+    margin-top: 0.05vh !important;
   }
 }
