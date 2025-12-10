@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import SettingsDialog from "./components/SettingsDialog";
+import HelpDialog from "./components/HelpDialog";
+import { getTranslations, availableLanguages } from "./locales";
 import "./App.css";
 
 // Import button images
@@ -62,6 +64,10 @@ function App() {
     targetScore: 500, // Default target
     gridSize: 6, // Default grid size
   });
+  const [showHelp, setShowHelp] = useState(false);
+  // Add language state
+  const [language, setLanguage] = useState("en");
+  const t = getTranslations(language);
 
   // Refs
   const section1Ref = useRef(null);
@@ -241,6 +247,8 @@ function App() {
     if (!gameStarted || gamePaused) return;
 
     if (currentScore >= gameSettings.targetScore) {
+      setGameStarted(false);
+      setGamePaused(false);
       setGameWon(true);
       setGameOver(true);
       setGameMessage(
@@ -254,6 +262,8 @@ function App() {
 
     const allCellsFilled = gridCells.every((cell) => cell.value !== null);
     if (allCellsFilled) {
+      setGameStarted(false);
+      setGamePaused(false);
       setGameOver(true);
       setGameMessage("Nice try! Board is full. 🔄 Click Start to try again!");
       if (gameIntervalRef.current) {
@@ -368,8 +378,8 @@ function App() {
     }
 
     setGamePaused(true);
-    setGameOver(true);
-    setGameStarted(false);
+    setGameOver(false);
+    setGameStarted(true);
     setGameMessage(
       "Game paused! ✋ Current progress saved. Click Start to continue!"
     );
@@ -377,8 +387,16 @@ function App() {
 
   const isPauseEnabled = gameStarted && !gameOver && !gameWon && !gamePaused;
 
+  const isGameRunning = gameStarted || gamePaused;
+
   // Settings handlers
   const handleOpenSettings = () => {
+    if (isGameRunning) {
+      setGameMessage(
+        "Settings cannot be changed during a game. Finish or restart first."
+      );
+      return;
+    }
     setShowSettings(true);
   };
 
@@ -391,45 +409,18 @@ function App() {
     setShowSettings(false);
   };
 
-  // Help button handler (placeholder for now)
-  const handleHelp = () => {
-    alert(
-      "Help feature coming soon! This game is called 10n.\n\n" +
-        "Game Rules:\n" +
-        "1. Numbers appear on the grid over time\n" +
-        "2. Select cells that sum to a multiple of 10 (10, 20, 30, etc.)\n" +
-        "3. When you select cells that sum to a multiple of 10, they disappear and you get points\n" +
-        "4. Try to reach the target score before the grid fills up!\n\n" +
-        "Use the Settings button to customize grid size, speed, and target score."
-    );
-  };
-
   // Add a handler function for the Home button
   const handleHome = () => {
-    // For now, just restart the game with default settings
-    if (gameIntervalRef.current) {
-      clearInterval(gameIntervalRef.current);
-    }
+    // Open website in new tab
+    window.open("https://wherestime.com", "_blank", "noopener,noreferrer");
+  };
 
-    setGameStarted(false);
-    setGameOver(false);
-    setGameWon(false);
-    setGamePaused(false);
-    setCurrentScore(0);
-    setSelectedCells(new Set());
-    setGameMessage("Welcome to 10n! Click Start to begin!");
+  const handleHelp = () => {
+    setShowHelp(true);
+  };
 
-    // Reset grid
-    const size = gameSettings.gridSize;
-    const newCells = [];
-    for (let i = 0; i < size * size; i++) {
-      newCells.push({
-        id: i,
-        value: null,
-        active: false,
-      });
-    }
-    setGridCells(newCells);
+  const handleCloseHelp = () => {
+    setShowHelp(false);
   };
 
   return (
@@ -481,7 +472,8 @@ function App() {
               <button
                 className="control-btn home-btn"
                 onClick={handleHome}
-                title="Home / Restart"
+                // disabled={isGameRunning}
+                title="Visit our website"
               >
                 <HomeIcon />
               </button>
@@ -529,6 +521,7 @@ function App() {
               <button
                 className="control-btn help-btn"
                 onClick={handleHelp}
+                disabled={gameStarted && !gamePaused}
                 title="Help & Instructions"
               >
                 <HelpIcon />
@@ -537,7 +530,7 @@ function App() {
               <button
                 className="control-btn settings-btn"
                 onClick={handleOpenSettings}
-                disabled={isPauseEnabled}
+                disabled={isGameRunning}
                 title="Game Settings"
               >
                 <SettingsIcon />
@@ -593,6 +586,8 @@ function App() {
                 }`}
               >
                 {gameMessage}
+                {/* <br />
+                {`game started: ${gameStarted}, game paused: ${gamePaused}, game won: ${gameWon}, gave over: ${gameOver}`} */}
               </div>
             </div>
           </div>
@@ -608,12 +603,16 @@ function App() {
         </div>
       </footer>
 
+      {/* Settings Dialog */}
       <SettingsDialog
         isOpen={showSettings}
         onClose={handleCloseSettings}
         onSave={handleSaveSettings}
         initialSettings={gameSettings}
       />
+
+      {/* Help Dialog */}
+      <HelpDialog isOpen={showHelp} onClose={handleCloseHelp} />
     </div>
   );
 }
