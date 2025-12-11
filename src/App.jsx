@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import SettingsDialog from "./components/SettingsDialog";
 import HelpDialog from "./components/HelpDialog";
 import CongratulationsDialog from "./components/CongratulationsDialog";
+import FailedLevelDialog from "./components/FailedLevelDialog";
+import BestScoresDialog from "./components/BestScoresDialog";
 import { getTranslations, availableLanguages } from "./locales";
 import "./App.css";
 
@@ -43,6 +45,12 @@ const HomeIcon = () => (
   </svg>
 );
 
+const LeaderboardIcon = () => (
+  <svg className="button-icon" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4 10h-2v2h2v-2zm-4 0H9v2h2v-2zm4-4h-2v2h2V9zm-4 0H9v2h2V9zm8 8H7v-2h10v2zm0-6h-2v2h2v-2zm0-4h-2v2h2V7z" />
+  </svg>
+);
+
 function App() {
   // Game state
   const [gameStarted, setGameStarted] = useState(false);
@@ -60,13 +68,30 @@ function App() {
   const [viewportHeight, setViewportHeight] = useState(0);
   const [adHeight, setAdHeight] = useState(90);
   const [showSettings, setShowSettings] = useState(false);
-  const [gameSettings, setGameSettings] = useState({
-    gameSpeed: 1000, // Default: 1 second
-    targetScore: 500, // Default target
-    gridSize: 6, // Default grid size
+
+  // Update the initial gameSettings to load from localStorage
+  const [gameSettings, setGameSettings] = useState(() => {
+    // Load from localStorage or use defaults
+    const savedSettings = localStorage.getItem("10n_last_game_settings");
+    if (savedSettings) {
+      try {
+        return JSON.parse(savedSettings);
+      } catch (error) {
+        console.error("Error parsing saved settings:", error);
+      }
+    }
+    // Default settings
+    return {
+      gameSpeed: 1000, // Default: 1 second
+      targetScore: 200, // Default target
+      gridSize: 6, // Default grid size
+    };
   });
+
   const [showHelp, setShowHelp] = useState(false);
   const [showCongratulations, setShowCongratulations] = useState(false);
+  const [showFailedDialog, setShowFailedDialog] = useState(false);
+  const [showBestScores, setShowBestScores] = useState(false);
   // Add language state
   const [language, setLanguage] = useState("en");
   const t = getTranslations(language);
@@ -253,7 +278,9 @@ function App() {
       setGamePaused(false);
       setGameWon(true);
       setGameOver(true);
-      setGameMessage("Great job! Level completed! 🏆");
+      setGameMessage(
+        "Great job! Level completed! 🏆 Click Start to play again!"
+      );
 
       if (gameIntervalRef.current) {
         clearInterval(gameIntervalRef.current);
@@ -273,6 +300,8 @@ function App() {
       setGamePaused(false);
       setGameOver(true);
       setGameMessage("Nice try! Board is full. 🔄 Click Start to try again!");
+      setShowFailedDialog(true); // Show the new dialog
+      //
       if (gameIntervalRef.current) {
         clearInterval(gameIntervalRef.current);
       }
@@ -293,6 +322,14 @@ function App() {
     gameStarted,
     gamePaused,
   ]);
+
+  // Save settings to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem(
+      "10n_last_game_settings",
+      JSON.stringify(gameSettings)
+    );
+  }, [gameSettings]);
 
   // Cell click handler
   const handleCellClick = (id) => {
@@ -457,6 +494,22 @@ function App() {
     setGameMessage("Click Start to begin!");
   };
 
+  // Add handler for best scores button
+  const handleBestScores = () => {
+    setShowBestScores(true);
+  };
+
+  // Add handlers
+  const handleRetryGame = () => {
+    setShowFailedDialog(false);
+    handleStartGame();
+  };
+
+  const handleFailedSettings = () => {
+    setShowFailedDialog(false);
+    handleOpenSettings();
+  };
+
   return (
     <div className="app">
       <header className="game-header" ref={section1Ref}>
@@ -562,6 +615,14 @@ function App() {
               </button>
 
               <button
+                className="control-btn leaderboard-btn"
+                onClick={handleBestScores}
+                title="Best Scores"
+              >
+                <LeaderboardIcon />
+              </button>
+
+              <button
                 className="control-btn settings-btn"
                 onClick={handleOpenSettings}
                 disabled={isGameRunning}
@@ -653,6 +714,24 @@ function App() {
         isOpen={showCongratulations}
         onClose={handleCloseCongratulations}
         onNewGame={handleNewGame}
+        currentScore={currentScore}
+        targetScore={gameSettings.targetScore}
+        gridSize={gameSettings.gridSize}
+        speed={gameSettings.gameSpeed}
+      />
+
+      {/* Best Score Dialog */}
+      <BestScoresDialog
+        isOpen={showBestScores}
+        onClose={() => setShowBestScores(false)}
+      />
+
+      {/* Failed level dialog */}
+      <FailedLevelDialog
+        isOpen={showFailedDialog}
+        onClose={() => setShowFailedDialog(false)}
+        onRetry={handleRetryGame}
+        onSettings={handleFailedSettings}
         currentScore={currentScore}
         targetScore={gameSettings.targetScore}
         gridSize={gameSettings.gridSize}

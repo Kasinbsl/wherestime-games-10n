@@ -11,9 +11,27 @@ export const getBestScores = () => {
   }
 };
 
+// Update the saveBestScore function to work with our new structure
 export const saveBestScore = (score, gridSize, speed) => {
   try {
-    const bestScores = getBestScores();
+    // First, try to get existing best scores from localStorage
+    let bestScores = [];
+    const existingScores = localStorage.getItem(STORAGE_KEY);
+
+    if (existingScores) {
+      try {
+        bestScores = JSON.parse(existingScores);
+        // Ensure we have an array
+        if (!Array.isArray(bestScores)) {
+          bestScores = [];
+        }
+      } catch (error) {
+        console.error("Error parsing existing scores:", error);
+        bestScores = [];
+      }
+    }
+
+    // Check if we already have a score for this gridSize and speed
     const existingIndex = bestScores.findIndex(
       (item) => item.gridSize === gridSize && item.speed === speed
     );
@@ -30,9 +48,15 @@ export const saveBestScore = (score, gridSize, speed) => {
       }
     } else {
       // Add new entry
-      bestScores.push({ score, gridSize, speed, timestamp: Date.now() });
+      bestScores.push({
+        score,
+        gridSize,
+        speed,
+        timestamp: Date.now(),
+      });
     }
 
+    // Save back to localStorage
     localStorage.setItem(STORAGE_KEY, JSON.stringify(bestScores));
     return bestScores;
   } catch (error) {
@@ -41,12 +65,18 @@ export const saveBestScore = (score, gridSize, speed) => {
   }
 };
 
+// Update getBestScoreForSettings to match
 export const getBestScoreForSettings = (gridSize, speed) => {
-  const bestScores = getBestScores();
-  const match = bestScores.find(
-    (item) => item.gridSize === gridSize && item.speed === speed
-  );
-  return match ? match.score : null;
+  try {
+    const bestScores = getBestScores();
+    const match = bestScores.find(
+      (item) => item.gridSize === gridSize && item.speed === speed
+    );
+    return match ? match.score : null;
+  } catch (error) {
+    console.error("Error getting best score:", error);
+    return null;
+  }
 };
 
 export const clearBestScores = () => {

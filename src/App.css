@@ -1227,3 +1227,52 @@ body {
     margin-top: 0.05vh !important;
   }
 }
+
+/* Add to App.css - Leaderboard button styles */
+.leaderboard-btn {
+  background-color: #ff8e53;
+}
+
+.leaderboard-btn:not(:disabled):hover {
+  background-color: #ff9e6b;
+  box-shadow: 0 0 12px rgba(255, 158, 107, 0.6);
+}
+
+/* Make sure it has the same dimensions as other buttons */
+.control-btn.leaderboard-btn {
+  width: calc(2rem + 1vh) !important;
+  height: calc(2rem + 1vh) !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Responsive sizing for leaderboard button */
+@media (max-width: 1023px) and (min-width: 769px) {
+  .control-btn.leaderboard-btn {
+    width: calc(1.8rem + 0.9vh) !important;
+    height: calc(1.8rem + 0.9vh) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .control-btn.leaderboard-btn {
+    width: calc(1.8rem + 0.9vh) !important;
+    height: calc(1.8rem + 0.9vh) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .control-btn.leaderboard-btn {
+    width: calc(1.6rem + 0.8vh) !important;
+    height: calc(1.6rem + 0.8vh) !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .control-btn.leaderboard-btn {
+    width: calc(1.4rem + 0.7vh) !important;
+    height: calc(1.4rem + 0.7vh) !important;
+  }
+}
