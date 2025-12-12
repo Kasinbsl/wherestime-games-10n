@@ -65,6 +65,21 @@ const LanguageIcon = () => (
   </svg>
 );
 
+// In App.jsx, add these SVG icons near the other icon definitions:
+
+// Add these SVG icons after the existing ones:
+const MenuIcon = () => (
+  <svg className="button-icon" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+  </svg>
+);
+
+const CloseMenuIcon = () => (
+  <svg className="button-icon" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+  </svg>
+);
+
 function App() {
   // Game state
   const [gameStarted, setGameStarted] = useState(false);
@@ -82,6 +97,7 @@ function App() {
   const [viewportHeight, setViewportHeight] = useState(0);
   const [adHeight, setAdHeight] = useState(90);
   const [showSettings, setShowSettings] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   // Update the initial gameSettings to load from localStorage
   const [gameSettings, setGameSettings] = useState(() => {
@@ -574,7 +590,7 @@ function App() {
               <button
                 className="control-btn home-btn"
                 onClick={handleHome}
-                // disabled={isGameRunning}
+                disabled={isGameRunning}
                 title={t.home}
               >
                 <HomeIcon />
@@ -620,33 +636,46 @@ function App() {
 
             {/* Utility controls - right aligned */}
             <div className="utility-controls">
+              {/* Mobile menu button - only shown on small screens */}
               <button
-                className="control-btn help-btn"
-                onClick={handleHelp}
-                disabled={gameStarted && !gamePaused}
-                title={t.help}
+                className="control-btn menu-btn mobile-only"
+                onClick={() => setShowMobileMenu(!showMobileMenu)}
+                title="Menu"
+                disabled={isGameRunning}
               >
-                <HelpIcon />
+                {showMobileMenu ? <CloseMenuIcon /> : <MenuIcon />}
               </button>
 
+              {/* Desktop buttons - hidden on mobile */}
               <button
-                className="control-btn leaderboard-btn"
-                onClick={handleBestScores}
-                title={t.leaderboard}
-              >
-                <LeaderboardIcon />
-              </button>
-
-              <button
-                className="control-btn language-btn"
+                className="control-btn language-btn desktop-only"
                 onClick={() => setShowLanguageSelector(true)}
                 title={t.language}
+                disabled={isGameRunning}
               >
                 <LanguageIcon />
               </button>
 
               <button
-                className="control-btn settings-btn"
+                className="control-btn leaderboard-btn desktop-only"
+                onClick={handleBestScores}
+                title={t.leaderboard}
+                disabled={isGameRunning}
+              >
+                <LeaderboardIcon />
+              </button>
+
+              <button
+                className="control-btn help-btn desktop-only"
+                onClick={handleHelp}
+                title={t.help}
+                disabled={isGameRunning}
+              >
+                <HelpIcon />
+              </button>
+
+              <button
+                className="control-btn settings-btn desktop-only"
                 onClick={handleOpenSettings}
                 disabled={isGameRunning}
                 title={t.settings}
@@ -654,8 +683,63 @@ function App() {
                 <SettingsIcon />
               </button>
             </div>
+            {/* above - end of Utility controls - right aligned */}
           </div>
         </div>
+
+        {/* mobile menu overlay --- Start */}
+
+        {showMobileMenu && (
+          <div
+            className="mobile-menu-overlay"
+            onClick={() => setShowMobileMenu(false)}
+          >
+            <div className="mobile-menu" onClick={(e) => e.stopPropagation()}>
+              <button
+                className="mobile-menu-item"
+                onClick={() => {
+                  setShowMobileMenu(false);
+                  setShowLanguageSelector(true);
+                }}
+              >
+                <LanguageIcon />
+                <span>{t.language}</span>
+              </button>
+              <button
+                className="mobile-menu-item"
+                onClick={() => {
+                  setShowMobileMenu(false);
+                  handleBestScores();
+                }}
+              >
+                <LeaderboardIcon />
+                <span>{t.leaderboard}</span>
+              </button>
+              <button
+                className="mobile-menu-item"
+                onClick={() => {
+                  setShowMobileMenu(false);
+                  handleHelp();
+                }}
+              >
+                <HelpIcon />
+                <span>{t.help}</span>
+              </button>
+              <button
+                className="mobile-menu-item"
+                onClick={() => {
+                  setShowMobileMenu(false);
+                  handleOpenSettings();
+                }}
+              >
+                <SettingsIcon />
+                <span>{t.settings}</span>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* mobile menu overlay --- end */}
       </header>
 
       <main className="game-board" ref={section2Ref}>
