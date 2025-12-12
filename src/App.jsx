@@ -4,7 +4,15 @@ import HelpDialog from "./components/HelpDialog";
 import CongratulationsDialog from "./components/CongratulationsDialog";
 import FailedLevelDialog from "./components/FailedLevelDialog";
 import BestScoresDialog from "./components/BestScoresDialog";
-import { getTranslations, availableLanguages } from "./locales";
+
+import {
+  getTranslations,
+  availableLanguages,
+  loadLanguagePreference,
+  saveLanguagePreference,
+} from "./locales";
+import LanguageSelector from "./components/LanguageSelector";
+
 import "./App.css";
 
 // Import button images
@@ -51,6 +59,12 @@ const LeaderboardIcon = () => (
   </svg>
 );
 
+const LanguageIcon = () => (
+  <svg className="button-icon" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z" />
+  </svg>
+);
+
 function App() {
   // Game state
   const [gameStarted, setGameStarted] = useState(false);
@@ -93,7 +107,9 @@ function App() {
   const [showFailedDialog, setShowFailedDialog] = useState(false);
   const [showBestScores, setShowBestScores] = useState(false);
   // Add language state
-  const [language, setLanguage] = useState("en");
+  const [showLanguageSelector, setShowLanguageSelector] = useState(false);
+  const [language, setLanguage] = useState(() => loadLanguagePreference());
+  //
   const t = getTranslations(language);
 
   // Refs
@@ -236,7 +252,7 @@ function App() {
 
     setGridCells(cells);
     setSelectedCells(new Set());
-    setGameMessage("Click Start to begin!");
+    setGameMessage(t.clickToStart);
     setGamePaused(false);
   }, [gameSettings.gridSize]);
 
@@ -278,9 +294,7 @@ function App() {
       setGamePaused(false);
       setGameWon(true);
       setGameOver(true);
-      setGameMessage(
-        "Great job! Level completed! 🏆 Click Start to play again!"
-      );
+      setGameMessage(t.greatJob);
 
       if (gameIntervalRef.current) {
         clearInterval(gameIntervalRef.current);
@@ -299,7 +313,7 @@ function App() {
       setGameStarted(false);
       setGamePaused(false);
       setGameOver(true);
-      setGameMessage("Nice try! Board is full. 🔄 Click Start to try again!");
+      setGameMessage(t.niceTry);
       setShowFailedDialog(true); // Show the new dialog
       //
       if (gameIntervalRef.current) {
@@ -313,7 +327,7 @@ function App() {
       Math.floor((currentScore / gameSettings.targetScore) * 100)
     );
     setGameMessage(
-      `Progress: ${progress}% (${currentScore}/${gameSettings.targetScore})`
+      `${t.progress}: ${progress}% (${currentScore}/${gameSettings.targetScore})`
     );
   }, [
     currentScore,
@@ -374,7 +388,7 @@ function App() {
         return newScore;
       });
 
-      setGameMessage(`+${sum} points! Great combo! 🎯`);
+      setGameMessage(`+${sum} ${t.pointsEarned}`);
     }
   };
 
@@ -387,7 +401,7 @@ function App() {
       setGamePaused(false);
       setGameOver(false);
       setGameStarted(true);
-      setGameMessage("Game resumed! Select cells that sum to 10!");
+      setGameMessage(t.gameResumed);
     } else {
       const size = gameSettings.gridSize;
       const newCells = [];
@@ -407,13 +421,13 @@ function App() {
       setGamePaused(false);
       setCurrentScore(0);
       setSelectedCells(new Set());
-      setGameMessage("Game started! Select cells that sum to 10!");
+      setGameMessage(t.gameStarted);
     }
   };
 
   const handleDeselectAll = () => {
     setSelectedCells(new Set());
-    setGameMessage("All cells deselected.");
+    setGameMessage(t.deselectMessage);
   };
 
   const handlePauseGame = () => {
@@ -424,9 +438,7 @@ function App() {
     setGamePaused(true);
     setGameOver(false);
     setGameStarted(true);
-    setGameMessage(
-      "Game paused! ✋ Current progress saved. Click Start to continue!"
-    );
+    setGameMessage(t.gamePaused);
   };
 
   const isPauseEnabled = gameStarted && !gameOver && !gameWon && !gamePaused;
@@ -436,9 +448,7 @@ function App() {
   // Settings handlers
   const handleOpenSettings = () => {
     if (isGameRunning) {
-      setGameMessage(
-        "Settings cannot be changed during a game. Finish or restart first."
-      );
+      setGameMessage(t.settingsDuringGame);
       return;
     }
     setShowSettings(true);
@@ -491,7 +501,7 @@ function App() {
     setGamePaused(false);
     setCurrentScore(0);
     setSelectedCells(new Set());
-    setGameMessage("Click Start to begin!");
+    setGameMessage(t.clickToStart);
   };
 
   // Add handler for best scores button
@@ -510,6 +520,11 @@ function App() {
     handleOpenSettings();
   };
 
+  const handleLanguageChange = (newLanguage) => {
+    setLanguage(newLanguage);
+    saveLanguagePreference(newLanguage);
+  };
+
   return (
     <div className="app">
       <header className="game-header" ref={section1Ref}>
@@ -519,33 +534,33 @@ function App() {
           <div className="game-info">
             <div className="info-panel">
               <div className="info-content">
-                <span className="info-label">Grid Size</span>
+                <span className="info-label">{t.gridSize}</span>
                 <div className="grid-size-display">
                   {gameSettings.gridSize} × {gameSettings.gridSize}
                 </div>
                 <span className="grid-size-text">
-                  {gameSettings.gridSize * gameSettings.gridSize} cells
+                  {gameSettings.gridSize * gameSettings.gridSize} {t.cells}
                 </span>
               </div>
             </div>
 
             <div className="info-panel">
               <div className="info-content">
-                <span className="info-label">Speed</span>
+                <span className="info-label">{t.speed}</span>
                 <div className="speed-display">
                   {(gameSettings.gameSpeed / 1000).toFixed(2)}s
                 </div>
-                <span className="speed-text">per number</span>
+                <span className="speed-text">{t.perNumber}</span>
               </div>
             </div>
 
             <div className="info-panel">
               <div className="info-content">
-                <span className="info-label">Target Score</span>
+                <span className="info-label">{t.targetScore}</span>
                 <div className="target-score-display">
                   {gameSettings.targetScore}
                 </div>
-                <span className="target-text">to win</span>
+                <span className="target-text">{t.toWin}</span>
               </div>
             </div>
           </div>
@@ -560,7 +575,7 @@ function App() {
                 className="control-btn home-btn"
                 onClick={handleHome}
                 // disabled={isGameRunning}
-                title="Visit our website"
+                title={t.home}
               >
                 <HomeIcon />
               </button>
@@ -574,7 +589,7 @@ function App() {
                 }`}
                 onClick={handleStartGame}
                 disabled={gameStarted && !gameOver && !gamePaused}
-                title={gamePaused ? "Resume Game" : "Start Game"}
+                title={gamePaused ? t.gameResumed : t.startGame}
               >
                 <PlayIcon />
               </button>
@@ -588,7 +603,7 @@ function App() {
                   gamePaused ||
                   selectedCells.size === 0
                 }
-                title="Deselect All"
+                title={t.deselectAll}
               >
                 <DeselectIcon />
               </button>
@@ -597,7 +612,7 @@ function App() {
                 className="control-btn pause-btn"
                 onClick={handlePauseGame}
                 disabled={!isPauseEnabled}
-                title="Pause Game"
+                title={t.pauseGame}
               >
                 <PauseIcon />
               </button>
@@ -609,7 +624,7 @@ function App() {
                 className="control-btn help-btn"
                 onClick={handleHelp}
                 disabled={gameStarted && !gamePaused}
-                title="Help & Instructions"
+                title={t.help}
               >
                 <HelpIcon />
               </button>
@@ -617,16 +632,24 @@ function App() {
               <button
                 className="control-btn leaderboard-btn"
                 onClick={handleBestScores}
-                title="Best Scores"
+                title={t.leaderboard}
               >
                 <LeaderboardIcon />
+              </button>
+
+              <button
+                className="control-btn language-btn"
+                onClick={() => setShowLanguageSelector(true)}
+                title={t.language}
+              >
+                <LanguageIcon />
               </button>
 
               <button
                 className="control-btn settings-btn"
                 onClick={handleOpenSettings}
                 disabled={isGameRunning}
-                title="Game Settings"
+                title={t.settings}
               >
                 <SettingsIcon />
               </button>
@@ -704,10 +727,15 @@ function App() {
         onClose={handleCloseSettings}
         onSave={handleSaveSettings}
         initialSettings={gameSettings}
+        language={language}
       />
 
       {/* Help Dialog */}
-      <HelpDialog isOpen={showHelp} onClose={handleCloseHelp} />
+      <HelpDialog
+        isOpen={showHelp}
+        onClose={handleCloseHelp}
+        language={language}
+      />
 
       {/* Congratulations Dialog */}
       <CongratulationsDialog
@@ -718,12 +746,14 @@ function App() {
         targetScore={gameSettings.targetScore}
         gridSize={gameSettings.gridSize}
         speed={gameSettings.gameSpeed}
+        language={language}
       />
 
       {/* Best Score Dialog */}
       <BestScoresDialog
         isOpen={showBestScores}
         onClose={() => setShowBestScores(false)}
+        language={language}
       />
 
       {/* Failed level dialog */}
@@ -736,6 +766,15 @@ function App() {
         targetScore={gameSettings.targetScore}
         gridSize={gameSettings.gridSize}
         speed={gameSettings.gameSpeed}
+        language={language}
+      />
+
+      {/* Language Selector */}
+      <LanguageSelector
+        currentLanguage={language}
+        onLanguageChange={handleLanguageChange}
+        isOpen={showLanguageSelector}
+        onClose={() => setShowLanguageSelector(false)}
       />
 
       {/* The last Div */}

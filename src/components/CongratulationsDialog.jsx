@@ -1,6 +1,8 @@
+// src/components/CongratulationsDialog.jsx
 import React, { useEffect, useState } from "react";
 import { saveBestScore, getBestScoreForSettings } from "../utils/storage";
 import { launchConfetti } from "../utils/confetti";
+import { getTranslations } from "../locales";
 import "./CongratulationsDialog.css";
 
 const CongratulationsDialog = ({
@@ -11,7 +13,9 @@ const CongratulationsDialog = ({
   gridSize,
   speed,
   onNewGame,
+  language = "en",
 }) => {
+  const t = getTranslations(language);
   const [bestScore, setBestScore] = useState(null);
   const [isNewRecord, setIsNewRecord] = useState(false);
 
@@ -31,7 +35,6 @@ const CongratulationsDialog = ({
 
   useEffect(() => {
     if (isOpen) {
-      // Launch confetti when dialog opens
       const timeout = setTimeout(() => {
         launchConfetti();
       }, 300);
@@ -68,11 +71,11 @@ const CongratulationsDialog = ({
           <div className="congrats-header-content">
             <h2 className="congrats-dialog-title">
               <span className="congrats-emoji">🎉</span>
-              You Win!
+              {t.youWin}
               <span className="congrats-emoji">🎉</span>
             </h2>
             {isNewRecord && (
-              <div className="new-record-badge">🏆 New Record!</div>
+              <div className="new-record-badge">{t.newRecord}</div>
             )}
           </div>
           <button className="congrats-dialog-close-btn" onClick={onClose}>
@@ -87,10 +90,11 @@ const CongratulationsDialog = ({
           {/* Main Score Display */}
           <div className="main-score-display">
             <div className="score-container">
-              <div className="score-label">Your Score</div>
+              <div className="score-label">{t.yourScore}</div>
               <div className="score-value">{currentScore}</div>
               <div className="score-multiplier">
-                {getPerformanceEmoji()} {scoreRatio}x target
+                {getPerformanceEmoji()} {scoreRatio}
+                {t.xTarget}
               </div>
             </div>
           </div>
@@ -98,17 +102,17 @@ const CongratulationsDialog = ({
           {/* Game Settings Summary */}
           <div className="settings-summary">
             <div className="setting-item">
-              <span className="setting-label">Grid:</span>
+              <span className="setting-label">{t.grid}:</span>
               <span className="setting-value">
                 {gridSize}×{gridSize}
               </span>
             </div>
             <div className="setting-item">
-              <span className="setting-label">Speed:</span>
+              <span className="setting-label">{t.speed}:</span>
               <span className="setting-value">{formattedSpeed}s</span>
             </div>
             <div className="setting-item">
-              <span className="setting-label">Target:</span>
+              <span className="setting-label">{t.target}:</span>
               <span className="setting-value">{targetScore}</span>
             </div>
           </div>
@@ -117,21 +121,21 @@ const CongratulationsDialog = ({
           <div className="best-score-comparison compact">
             <h3 className="comparison-title">
               <span className="trophy-icon">🏆</span>
-              Personal Best
+              {t.best}
             </h3>
 
             <div className="comparison-content">
               {bestScore ? (
                 <div className="score-comparison-grid">
                   <div className="score-item">
-                    <div className="score-type">Previous</div>
+                    <div className="score-type">{t.previous}</div>
                     <div className="score-amount previous">{bestScore}</div>
                   </div>
 
                   <div className="score-arrow">→</div>
 
                   <div className="score-item">
-                    <div className="score-type">Current</div>
+                    <div className="score-type">{t.current}</div>
                     <div
                       className={`score-amount current ${
                         isNewRecord ? "new-record" : ""
@@ -143,18 +147,16 @@ const CongratulationsDialog = ({
                   </div>
                 </div>
               ) : (
-                <div className="first-time-message">
-                  🥇 First time with these settings!
-                </div>
+                <div className="first-time-message">{t.firstTimeMessage}</div>
               )}
 
               {isNewRecord && bestScore && (
                 <div className="improvement-message">
-                  Improved by{" "}
+                  {t.improvedBy}{" "}
                   <span className="improvement-amount">
                     +{currentScore - bestScore}
                   </span>{" "}
-                  points!
+                  {t.points}!
                 </div>
               )}
             </div>
@@ -163,21 +165,20 @@ const CongratulationsDialog = ({
           {/* Quick Tip */}
           <div className="quick-tip">
             <span className="tip-icon">💡</span>
-            Try a smaller grid, faster speed or a higher target score for more
-            challenge!
+            {t.tipMessage}
           </div>
         </div>
 
         {/* Compact Footer */}
         <div className="congrats-dialog-footer compact">
           <button className="congrats-btn compact-btn" onClick={onClose}>
-            Close
+            {t.close}
           </button>
           <button
             className="congrats-btn compact-btn primary"
             onClick={handlePlayAgain}
           >
-            Play Again
+            {t.playAgain}
           </button>
         </div>
       </div>

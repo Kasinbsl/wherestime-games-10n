@@ -1276,3 +1276,45 @@ body {
     height: calc(1.4rem + 0.7vh) !important;
   }
 }
+
+/* Add to App.css */
+.language-btn {
+  background-color: #4caf50;
+}
+
+.language-btn:not(:disabled):hover {
+  background-color: #66bb6a;
+  box-shadow: 0 0 12px rgba(102, 187, 106, 0.6);
+}
+
+/* Ensure consistent button sizing */
+.control-btn.language-btn {
+  width: calc(2rem + 1vh) !important;
+  height: calc(2rem + 1vh) !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Responsive sizing */
+@media (max-width: 1023px) and (min-width: 769px) {
+  .control-btn.language-btn {
+    width: calc(1.8rem + 0.9vh) !important;
+    height: calc(1.8rem + 0.9vh) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .control-btn.language-btn {
+    width: calc(1.8rem + 0.9vh) !important;
+    height: calc(1.8rem + 0.9vh) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .control-btn.language-btn {
+    width: calc(1.6rem + 0.8vh) !important;
+    height: calc(1.6rem + 0.8vh) !important;
+  }
+}

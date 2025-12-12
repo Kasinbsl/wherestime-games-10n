@@ -1,11 +1,21 @@
+// src/components/SettingsDialog.jsx
 import React, { useState, useEffect } from "react";
+import { getTranslations } from "../locales";
 import "./SettingsDialog.css";
 
-const SettingsDialog = ({ isOpen, onClose, onSave, initialSettings = {} }) => {
+const SettingsDialog = ({
+  isOpen,
+  onClose,
+  onSave,
+  initialSettings = {},
+  language = "en",
+}) => {
+  const t = getTranslations(language);
+
   const [settings, setSettings] = useState({
     gridSize: 6,
     gameSpeed: 1000,
-    targetScore: 500,
+    targetScore: 200,
   });
 
   // Initialize with provided settings
@@ -14,7 +24,7 @@ const SettingsDialog = ({ isOpen, onClose, onSave, initialSettings = {} }) => {
       setSettings({
         gridSize: initialSettings.gridSize || 6,
         gameSpeed: initialSettings.gameSpeed || 1000,
-        targetScore: initialSettings.targetScore || 500,
+        targetScore: initialSettings.targetScore || 200,
       });
     }
   }, [isOpen, initialSettings]);
@@ -55,7 +65,7 @@ const SettingsDialog = ({ isOpen, onClose, onSave, initialSettings = {} }) => {
       <div className="settings-dialog" onClick={(e) => e.stopPropagation()}>
         {/* Dialog Header */}
         <div className="settings-dialog-header">
-          <h2 className="settings-dialog-title">Game Settings</h2>
+          <h2 className="settings-dialog-title">{t.gameSettings}</h2>
           <button className="settings-dialog-close-btn" onClick={onClose}>
             <svg className="close-icon" viewBox="0 0 24 24" fill="currentColor">
               <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
@@ -63,12 +73,12 @@ const SettingsDialog = ({ isOpen, onClose, onSave, initialSettings = {} }) => {
           </button>
         </div>
 
-        {/* Dialog Content - REORDERED as requested */}
+        {/* Dialog Content */}
         <div className="settings-dialog-content">
-          {/* 1. Grid Size Setting - FIRST as requested */}
+          {/* Grid Size Setting */}
           <div className="setting-group">
             <div className="setting-header">
-              <h3 className="setting-title">Grid Size</h3>
+              <h3 className="setting-title">{t.gridSize}</h3>
               <div className="setting-value-display">
                 {settings.gridSize} × {settings.gridSize}
               </div>
@@ -97,24 +107,26 @@ const SettingsDialog = ({ isOpen, onClose, onSave, initialSettings = {} }) => {
               ))}
             </div>
 
-            <div className="setting-description">
-              Size of the game board (affects difficulty)
-            </div>
+            <div className="setting-description">{t.sizeOfBoard}</div>
           </div>
 
-          {/* 2. Game Speed Setting - SECOND as requested */}
+          {/* Game Speed Setting */}
           <div className="setting-group">
             <div className="setting-header">
-              <h3 className="setting-title">New Number Speed</h3>
+              <h3 className="setting-title">{t.newNumberSpeed}</h3>
               <div className="setting-value-display">
-                {formatSpeed(settings.gameSpeed)} seconds
+                {formatSpeed(settings.gameSpeed)} {t.seconds}
               </div>
             </div>
 
             <div className="slider-container">
               <div className="slider-labels">
-                <span className="slider-label">Fastest (0.30s)</span>
-                <span className="slider-label">Slowest (1.50s)</span>
+                <span className="slider-label">
+                  {t.fastest} (0.30{t.seconds})
+                </span>
+                <span className="slider-label">
+                  {t.slowest} (1.50{t.seconds})
+                </span>
               </div>
 
               <input
@@ -133,31 +145,30 @@ const SettingsDialog = ({ isOpen, onClose, onSave, initialSettings = {} }) => {
                   <div key={tick} className="slider-tick">
                     <div className="tick-line"></div>
                     <span className="tick-label">
-                      {(tick / 1000).toFixed(1)}s
+                      {(tick / 1000).toFixed(1)}
+                      {t.seconds}
                     </span>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="setting-description">
-              Controls how fast new numbers appear on the grid
-            </div>
+            <div className="setting-description">{t.controlsHowFast}</div>
           </div>
 
-          {/* 3. Target Score Setting - THIRD as requested with slider */}
+          {/* Target Score Setting */}
           <div className="setting-group">
             <div className="setting-header">
-              <h3 className="setting-title">Target Score</h3>
+              <h3 className="setting-title">{t.targetScore}</h3>
               <div className="setting-value-display">
-                {settings.targetScore} points
+                {settings.targetScore} {t.points}
               </div>
             </div>
 
             <div className="slider-container">
               <div className="slider-labels">
-                <span className="slider-label">Easy (200)</span>
-                <span className="slider-label">Hard (10,000)</span>
+                <span className="slider-label">{t.easy} (200)</span>
+                <span className="slider-label">{t.hard} (10,000)</span>
               </div>
 
               <input
@@ -183,22 +194,20 @@ const SettingsDialog = ({ isOpen, onClose, onSave, initialSettings = {} }) => {
               </div>
             </div>
 
-            <div className="setting-description">
-              Score needed to complete the level
-            </div>
+            <div className="setting-description">{t.scoreNeeded}</div>
           </div>
         </div>
 
         {/* Dialog Footer */}
         <div className="settings-dialog-footer">
           <button className="settings-btn settings-btn-close" onClick={onClose}>
-            Cancel
+            {t.cancel}
           </button>
           <button
             className="settings-btn settings-btn-save"
             onClick={handleSave}
           >
-            Save Changes
+            {t.saveChanges}
           </button>
         </div>
       </div>

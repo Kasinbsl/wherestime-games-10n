@@ -1,8 +1,9 @@
-// src/components/BestScoresDialog.jsx
 import React, { useState, useEffect } from "react";
+import { getTranslations } from "../locales";
 import "./BestScoresDialog.css";
 
-const BestScoresDialog = ({ isOpen, onClose }) => {
+const BestScoresDialog = ({ isOpen, onClose, language = "en" }) => {
+  const t = getTranslations(language);
   const [bestScores, setBestScores] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
@@ -68,10 +69,10 @@ const BestScoresDialog = ({ isOpen, onClose }) => {
           <div className="header-content">
             <h2 className="best-scores-dialog-title compact">
               <span className="trophy-icon">🏆</span>
-              Best Scores
+              {t.bestScores}
             </h2>
             <div className="record-count">
-              {sortedScores.length} record{sortedScores.length !== 1 ? "s" : ""}
+              {sortedScores.length} {t.records}
             </div>
           </div>
           <button
@@ -91,15 +92,15 @@ const BestScoresDialog = ({ isOpen, onClose }) => {
           ) : sortedScores.length === 0 ? (
             <div className="no-scores-message compact">
               <div className="empty-icon">📊</div>
-              <h3>No scores yet</h3>
-              <p>Play some games to see your best scores here!</p>
+              <h3>{t.noScoresYet}</h3>
+              <p>{t.playSomeGames}</p>
             </div>
           ) : (
             <div className="scores-table-container compact">
               <div className="table-header compact">
-                <div className="header-cell">Grid Size</div>
-                <div className="header-cell">Speed</div>
-                <div className="header-cell text-right">Best Score</div>
+                <div className="header-cell">{t.grid}</div>
+                <div className="header-cell">{t.speed}</div>
+                <div className="header-cell text-right">{t.best}</div>
               </div>
               <div className="table-body">
                 {sortedScores.slice(0, 8).map((score, index) => (
@@ -143,7 +144,7 @@ const BestScoresDialog = ({ isOpen, onClose }) => {
           {/* Quick Stats - More Compact */}
           <div className="score-stats compact">
             <div className="stat-item">
-              <div className="stat-label">Highest Score</div>
+              <div className="stat-label">{t.highestScore}</div>
               <div className="stat-value">
                 {sortedScores.length > 0
                   ? Math.max(...sortedScores.map((s) => s.score))
@@ -151,7 +152,7 @@ const BestScoresDialog = ({ isOpen, onClose }) => {
               </div>
             </div>
             <div className="stat-item">
-              <div className="stat-label">Avg. Score</div>
+              <div className="stat-label">{t.avgScore}</div>
               <div className="stat-value">
                 {sortedScores.length > 0
                   ? Math.round(
@@ -174,23 +175,20 @@ const BestScoresDialog = ({ isOpen, onClose }) => {
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="confirm-icon">⚠️</div>
-                <h3 className="confirm-title">Clear All Scores?</h3>
-                <p className="confirm-message">
-                  This will permanently delete all your best scores. This action
-                  cannot be undone.
-                </p>
+                <h3 className="confirm-title">{t.clearAllConfirm}</h3>
+                <p className="confirm-message">{t.clearConfirmMessage}</p>
                 <div className="confirm-buttons">
                   <button
                     className="confirm-btn cancel-btn"
                     onClick={() => setShowClearConfirm(false)}
                   >
-                    Cancel
+                    {t.cancel}
                   </button>
                   <button
                     className="confirm-btn clear-confirm-btn"
                     onClick={confirmClearScores}
                   >
-                    Clear All
+                    {t.clearAllScores}
                   </button>
                 </div>
               </div>
@@ -205,14 +203,14 @@ const BestScoresDialog = ({ isOpen, onClose }) => {
               className="best-scores-btn clear-btn compact"
               onClick={handleClearScores}
             >
-              Clear All Scores
+              {t.clearAllScores}
             </button>
           )}
           <button
             className="best-scores-btn close-btn compact"
             onClick={onClose}
           >
-            Close
+            {t.close}
           </button>
         </div>
       </div>
