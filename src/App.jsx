@@ -86,12 +86,14 @@ function App() {
   const [gameOver, setGameOver] = useState(false);
   const [gameWon, setGameWon] = useState(false);
   const [gamePaused, setGamePaused] = useState(false);
-  const [currentLevel, setCurrentLevel] = useState(1);
   const [currentScore, setCurrentScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
   const [gridCells, setGridCells] = useState([]);
   const [selectedCells, setSelectedCells] = useState(new Set());
-  const [gameMessage, setGameMessage] = useState("Click Start to begin!");
+  // const [gameMessage, setGameMessage] = useState("Click Start to begin!");
+  const [messageKey, setMessageKey] = useState("clickToStart");
+  const [messageData, setMessageData] = useState({});
+  //
   const [cellFontSize, setCellFontSize] = useState("24px");
   const [gridDimensions, setGridDimensions] = useState({ width: 0, height: 0 });
   const [viewportHeight, setViewportHeight] = useState(0);
@@ -268,7 +270,10 @@ function App() {
 
     setGridCells(cells);
     setSelectedCells(new Set());
-    setGameMessage(t.clickToStart);
+    //
+    setMessageKey("clickToStart");
+    setMessageData({});
+    //
     setGamePaused(false);
   }, [gameSettings.gridSize]);
 
@@ -310,7 +315,9 @@ function App() {
       setGamePaused(false);
       setGameWon(true);
       setGameOver(true);
-      setGameMessage(t.greatJob);
+      //
+      setMessageKey("greatJob");
+      setMessageData({});
 
       if (gameIntervalRef.current) {
         clearInterval(gameIntervalRef.current);
@@ -329,7 +336,10 @@ function App() {
       setGameStarted(false);
       setGamePaused(false);
       setGameOver(true);
-      setGameMessage(t.niceTry);
+      //
+      setMessageKey("niceTry");
+      setMessageData({});
+      //
       setShowFailedDialog(true); // Show the new dialog
       //
       if (gameIntervalRef.current) {
@@ -342,9 +352,9 @@ function App() {
       100,
       Math.floor((currentScore / gameSettings.targetScore) * 100)
     );
-    setGameMessage(
-      `${t.progress}: ${progress}% (${currentScore}/${gameSettings.targetScore})`
-    );
+    //
+    setMessageKey("progress");
+    setMessageData({});
   }, [
     currentScore,
     gameSettings.targetScore,
@@ -404,7 +414,8 @@ function App() {
         return newScore;
       });
 
-      setGameMessage(`+${sum} ${t.pointsEarned}`);
+      setMessageKey("pointsEarned");
+      setMessageData({ points: sum });
     }
   };
 
@@ -417,7 +428,10 @@ function App() {
       setGamePaused(false);
       setGameOver(false);
       setGameStarted(true);
-      setGameMessage(t.gameResumed);
+      //
+      setMessageKey("gameResumed");
+      setMessageData({});
+      //
     } else {
       const size = gameSettings.gridSize;
       const newCells = [];
@@ -437,13 +451,18 @@ function App() {
       setGamePaused(false);
       setCurrentScore(0);
       setSelectedCells(new Set());
-      setGameMessage(t.gameStarted);
+
+      //
+      setMessageKey("gameStarted");
+      setMessageData({});
     }
   };
 
   const handleDeselectAll = () => {
     setSelectedCells(new Set());
-    setGameMessage(t.deselectMessage);
+    //
+    setMessageKey("deselectMessage");
+    setMessageData({});
   };
 
   const handlePauseGame = () => {
@@ -454,7 +473,10 @@ function App() {
     setGamePaused(true);
     setGameOver(false);
     setGameStarted(true);
-    setGameMessage(t.gamePaused);
+
+    //
+    setMessageKey("gamePaused");
+    setMessageData({});
   };
 
   const isPauseEnabled = gameStarted && !gameOver && !gameWon && !gamePaused;
@@ -464,7 +486,8 @@ function App() {
   // Settings handlers
   const handleOpenSettings = () => {
     if (isGameRunning) {
-      setGameMessage(t.settingsDuringGame);
+      setMessageKey("settingsDuringGame");
+      setMessageData({});
       return;
     }
     setShowSettings(true);
@@ -517,7 +540,9 @@ function App() {
     setGamePaused(false);
     setCurrentScore(0);
     setSelectedCells(new Set());
-    setGameMessage(t.clickToStart);
+    //
+    setMessageKey("clickToStart");
+    setMessageData({});
   };
 
   // Add handler for best scores button
@@ -539,6 +564,30 @@ function App() {
   const handleLanguageChange = (newLanguage) => {
     setLanguage(newLanguage);
     saveLanguagePreference(newLanguage);
+  };
+
+  //
+  // Helper function to get the actual message text
+  const getGameMessage = () => {
+    const t = getTranslations(language);
+
+    switch (messageKey) {
+      case "progress": {
+        const progress = Math.min(
+          100,
+          Math.floor((currentScore / gameSettings.targetScore) * 100)
+        );
+        return `${t.progress}: ${progress}% (${currentScore}/${gameSettings.targetScore})`;
+      }
+
+      case "pointsEarned": {
+        const points = messageData.points || 0;
+        return `+${points} ${t.pointsEarned}`;
+      }
+
+      default:
+        return t[messageKey] || messageKey;
+    }
   };
 
   return (
@@ -787,7 +836,7 @@ function App() {
                   gameOver || gameWon || gamePaused ? "highlight-message" : ""
                 }`}
               >
-                {gameMessage}
+                {getGameMessage()}
                 {/* <br />
                 {`game started: ${gameStarted}, game paused: ${gamePaused}, game won: ${gameWon}, gave over: ${gameOver}`} */}
               </div>
