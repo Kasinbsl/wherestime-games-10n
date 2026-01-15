@@ -16,6 +16,8 @@ const SettingsDialog = ({
     gridSize: 6,
     gameSpeed: 1000,
     targetScore: 200,
+    musicEnabled: true, // Add this
+    musicVolume: 0.3, // Add this (30% volume)
   });
 
   // Initialize with provided settings
@@ -25,6 +27,8 @@ const SettingsDialog = ({
         gridSize: initialSettings.gridSize || 6,
         gameSpeed: initialSettings.gameSpeed || 1000,
         targetScore: initialSettings.targetScore || 200,
+        musicEnabled: initialSettings.musicEnabled !== false,
+        musicVolume: initialSettings.musicVolume || 0.3,
       });
     }
   }, [isOpen, initialSettings]);
@@ -196,6 +200,75 @@ const SettingsDialog = ({
 
             <div className="setting-description">{t.scoreNeeded}</div>
           </div>
+
+          {/* Background Music Setting */}
+          <div className="setting-group">
+            <div className="setting-header">
+              <h3 className="setting-title">{t.backgroundMusic}</h3>
+              <div className="setting-value-display">
+                {settings.musicEnabled
+                  ? t.backgroundMusicOn
+                  : t.backgroundMusicOff}
+              </div>
+            </div>
+
+            <div className="music-controls">
+              <div className="music-toggle">
+                <button
+                  className="music-toggle-btn enabled"
+                  onClick={() =>
+                    setSettings((prev) => ({
+                      ...prev,
+                      musicEnabled: !prev.musicEnabled,
+                    }))
+                  }
+                >
+                  {settings.musicEnabled
+                    ? "🔇 " + t.backgroundMusicOff
+                    : "🎵 " + t.backgroundMusicOn}
+                </button>
+              </div>
+
+              {settings.musicEnabled && (
+                <div className="volume-control">
+                  <div className="slider-labels">
+                    <span className="slider-label">
+                      {t.backgroundMusicQuiet}
+                    </span>
+                    <span className="slider-label">
+                      {t.backgroundMusicLoud}
+                    </span>
+                  </div>
+
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    step="1"
+                    value={settings.musicVolume * 100}
+                    onChange={(e) =>
+                      setSettings((prev) => ({
+                        ...prev,
+                        musicVolume: parseInt(e.target.value) / 100,
+                      }))
+                    }
+                    className="volume-slider"
+                    style={{ "--volume-percent": settings.musicVolume * 100 }}
+                  />
+
+                  <div className="volume-percentage">
+                    {Math.round(settings.musicVolume * 100)}%
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="setting-description">
+              {t.backgroundMusicDescription}
+            </div>
+          </div>
+
+          {/* end Div of Dialog Content */}
         </div>
 
         {/* Dialog Footer */}

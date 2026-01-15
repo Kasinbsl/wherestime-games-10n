@@ -18,6 +18,12 @@ export default {
   cells: "个格子",
   perNumber: "每个数字",
   toWin: "获胜",
+  backgroundMusic: "背景音乐",
+  backgroundMusicOn: "启动",
+  backgroundMusicOff: "关闭",
+  backgroundMusicQuiet: "静",
+  backgroundMusicLoud: "吵",
+  backgroundMusicDescription: "游戏过程中播放舒缓的背景音乐",
 
   // Messages
   clickToStart: "点击开始游戏！",

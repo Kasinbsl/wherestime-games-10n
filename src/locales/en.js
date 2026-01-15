@@ -17,6 +17,12 @@ export default {
   cells: "cells",
   perNumber: "per number",
   toWin: "to win",
+  backgroundMusic: "Background Music",
+  backgroundMusicOn: "ON",
+  backgroundMusicOff: "OFF",
+  backgroundMusicQuiet: "Quite",
+  backgroundMusicLoud: "Loud",
+  backgroundMusicDescription: "Calm background music during gameplay",
 
   // Messages
   clickToStart: "Click Start to begin!",

@@ -13,6 +13,9 @@ import {
 } from "./locales";
 import LanguageSelector from "./components/LanguageSelector";
 
+import { audioManager } from "./utils/audioManager";
+import { soundManager } from "./utils/soundManager";
+
 import "./App.css";
 
 // Import button images
@@ -107,7 +110,15 @@ function App() {
     const savedSettings = localStorage.getItem("10n_last_game_settings");
     if (savedSettings) {
       try {
-        return JSON.parse(savedSettings);
+        const parsed = JSON.parse(savedSettings);
+        return {
+          gameSpeed: 1000,
+          targetScore: 200,
+          gridSize: 6,
+          musicEnabled: true, // Add this
+          musicVolume: 0.3, // Add this (30% volume)
+          ...parsed,
+        };
       } catch (error) {
         console.error("Error parsing saved settings:", error);
       }
@@ -117,6 +128,8 @@ function App() {
       gameSpeed: 1000, // Default: 1 second
       targetScore: 200, // Default target
       gridSize: 6, // Default grid size
+      musicEnabled: true,
+      musicVolume: 0.3,
     };
   });
 
@@ -127,6 +140,9 @@ function App() {
   // Add language state
   const [showLanguageSelector, setShowLanguageSelector] = useState(false);
   const [language, setLanguage] = useState(() => loadLanguagePreference());
+  //
+  // In App.jsx, add a "tap to start music" overlay for mobile
+  // const [showMusicPrompt, setShowMusicPrompt] = useState(false);
   //
   const t = getTranslations(language);
 
@@ -325,6 +341,7 @@ function App() {
 
       // Show congratulations dialog after a short delay
       setTimeout(() => {
+        soundManager.play("gamewin");
         setShowCongratulations(true);
       }, 500);
 
@@ -340,11 +357,18 @@ function App() {
       setMessageKey("niceTry");
       setMessageData({});
       //
-      setShowFailedDialog(true); // Show the new dialog
+      // setShowFailedDialog(true); // Show the new dialog
       //
       if (gameIntervalRef.current) {
         clearInterval(gameIntervalRef.current);
       }
+      //
+      // Show failure dialog after a short delay
+      setTimeout(() => {
+        soundManager.play("gamelose");
+        setShowFailedDialog(true);
+      }, 500);
+      //
       return;
     }
 
@@ -370,6 +394,85 @@ function App() {
       JSON.stringify(gameSettings)
     );
   }, [gameSettings]);
+
+  // Initialize audio on component mount
+  useEffect(() => {
+    //
+    // sound manager setup
+    soundManager.load("gamewin", "/games/10n/music/gaming-victory-464016.mp3");
+    soundManager.load(
+      "gamelose",
+      "/games/10n/music/classic-game-action-negative-18-224576.mp3"
+    );
+
+    //
+    //  audio manager setup
+    audioManager.initialize();
+
+    // // Handle user interaction for autoplay
+    // const handleUserInteraction = () => {
+    //   audioManager.handleUserInteraction();
+    //   // Remove listeners after first interaction
+    //   window.removeEventListener("click", handleUserInteraction);
+    //   window.removeEventListener("touchstart", handleUserInteraction);
+    //   window.removeEventListener("keydown", handleUserInteraction);
+    // };
+
+    // window.addEventListener("click", handleUserInteraction);
+    // window.addEventListener("touchstart", handleUserInteraction);
+    // window.addEventListener("keydown", handleUserInteraction);
+
+    // return () => {
+    //   window.removeEventListener("click", handleUserInteraction);
+    //   window.removeEventListener("touchstart", handleUserInteraction);
+    //   window.removeEventListener("keydown", handleUserInteraction);
+    // };
+  }, []);
+
+  // Control music based on game state
+  useEffect(() => {
+    if (gameStarted && !gamePaused && !gameOver && !gameWon) {
+      // Game is actively playing
+      if (gameSettings.musicEnabled) {
+        audioManager.setMusicEnabled(true);
+        audioManager.setMusicVolume(gameSettings.musicVolume);
+        audioManager.playBackgroundMusic();
+      }
+    } else {
+      // Game is not active (paused, over, or not started)
+      audioManager.pauseBackgroundMusic();
+    }
+  }, [
+    gameStarted,
+    gamePaused,
+    gameOver,
+    gameWon,
+    gameSettings.musicEnabled,
+    gameSettings.musicVolume,
+  ]);
+
+  // Update audio manager when settings change
+  useEffect(() => {
+    // Update audio manager
+    audioManager.setMusicEnabled(gameSettings.musicEnabled);
+    audioManager.setMusicVolume(gameSettings.musicVolume);
+    // Update sound manager
+    soundManager.setMute(!gameSettings.musicEnabled);
+    soundManager.setVolume(gameSettings.musicVolume);
+  }, [gameSettings.musicEnabled, gameSettings.musicVolume]);
+
+  // useEffect(() => {
+  //   // Check if we're on mobile and music hasn't started
+  //   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+  //   if (isMobile && gameSettings.musicEnabled) {
+  //     setTimeout(() => {
+  //       if (!audioManager.isPlaying) {
+  //         setShowMusicPrompt(true);
+  //       }
+  //     }, 2000);
+  //   }
+  // }, [gameSettings.musicEnabled]);
 
   // Cell click handler
   const handleCellClick = (id) => {
@@ -499,6 +602,13 @@ function App() {
 
   const handleSaveSettings = (newSettings) => {
     setGameSettings(newSettings);
+    // Update audio manager
+    audioManager.setMusicEnabled(newSettings.musicEnabled);
+    audioManager.setMusicVolume(newSettings.musicVolume);
+    // Update sound manager
+    soundManager.setMute(!newSettings.musicEnabled);
+    soundManager.setVolume(newSettings.musicVolume);
+    //
     setShowSettings(false);
   };
 
@@ -630,7 +740,6 @@ function App() {
             </div>
           </div>
         </div>
-
         {/* Update the header-controls-row section in the App.jsx: */}
         <div className="header-controls-row">
           <div className="controls-wrapper">
@@ -735,9 +844,7 @@ function App() {
             {/* above - end of Utility controls - right aligned */}
           </div>
         </div>
-
         {/* mobile menu overlay --- Start */}
-
         {showMobileMenu && (
           <div
             className="mobile-menu-overlay"
@@ -787,8 +894,25 @@ function App() {
             </div>
           </div>
         )}
-
         {/* mobile menu overlay --- end */}
+        {/* Show Music Prompt overlay --- begin */}
+
+        {/* {showMusicPrompt && (
+          <div className="music-prompt-overlay">
+            <div className="music-prompt">
+              <p>Tap anywhere to enable background music</p>
+              <button
+                onClick={() => {
+                  audioManager.handleUserInteraction();
+                  setShowMusicPrompt(false);
+                }}
+              >
+                Enable Music
+              </button>
+            </div>
+          </div>
+        )} */}
+        {/* Show Music Prompt overlay --- end */}
       </header>
 
       <main className="game-board" ref={section2Ref}>

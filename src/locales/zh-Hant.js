@@ -18,6 +18,12 @@ export default {
   cells: "個格子",
   perNumber: "每個數字",
   toWin: "獲勝",
+  backgroundMusic: "背景音樂",
+  backgroundMusicOn: "啟動",
+  backgroundMusicOff: "關閉",
+  backgroundMusicQuiet: "靜",
+  backgroundMusicLoud: "吵",
+  backgroundMusicDescription: "遊戲過程中播放舒緩的背景音樂",
 
   // Messages
   clickToStart: "點擊開始遊戲！",
