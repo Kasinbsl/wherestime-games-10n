@@ -55,6 +55,7 @@ export default {
   // Help Dialog
   helpInstructions: "10n 遊戲 - 幫助與說明",
   version: "版本",
+  updatesAuto: "重啟應用程式時會自動更新",
   howToPlay: "🎮 如何遊戲",
   howToPlay1: "1. <strong>點擊數字</strong>選擇它們",
   howToPlay2: "2. <strong>再次點擊</strong>取消選擇",

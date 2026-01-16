@@ -12,12 +12,7 @@ const HelpDialog = ({ isOpen, onClose, language = "en" }) => {
       <div className="help-dialog" onClick={(e) => e.stopPropagation()}>
         {/* Dialog Header */}
         <div className="help-dialog-header">
-          <h2 className="help-dialog-title">
-            {t.helpInstructions}{" "}
-            <span className="help-dialog-title-version">
-              ({t.version}: 1.0.0)
-            </span>
-          </h2>
+          <h2 className="help-dialog-title">{t.helpInstructions}</h2>
           <button className="help-dialog-close-btn" onClick={onClose}>
             <svg className="close-icon" viewBox="0 0 24 24" fill="currentColor">
               <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
@@ -79,8 +74,18 @@ const HelpDialog = ({ isOpen, onClose, language = "en" }) => {
           </div>
         </div>
 
-        {/* Dialog Footer */}
+        {/* Dialog Footer --- Begin */}
         <div className="help-dialog-footer">
+          <div className="version-info">
+            <span className="version-label">{t.version}:</span>
+            <span className="version-number">1.0.0.0</span>
+          </div>
+
+          {/* Optional: Add update info */}
+          <div className="update-info">
+            <small>{t.updatesAuto}</small>
+          </div>
+
           <button
             className="help-dialog-btn help-dialog-btn-close"
             onClick={onClose}
@@ -88,6 +93,7 @@ const HelpDialog = ({ isOpen, onClose, language = "en" }) => {
             {t.gotIt}
           </button>
         </div>
+        {/* Dialog Footer --- End  */}
       </div>
     </div>
   );

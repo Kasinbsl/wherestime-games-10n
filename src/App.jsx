@@ -133,8 +133,6 @@ function App() {
     };
   });
 
-  const [updateAvailable, setUpdateAvailable] = useState(false);
-  const [registration, setRegistration] = useState(null);
   const [showHelp, setShowHelp] = useState(false);
   const [showCongratulations, setShowCongratulations] = useState(false);
   const [showFailedDialog, setShowFailedDialog] = useState(false);
@@ -463,54 +461,6 @@ function App() {
     soundManager.setVolume(gameSettings.musicVolume);
   }, [gameSettings.musicEnabled, gameSettings.musicVolume]);
 
-  // useEffect for detcting update
-  useEffect(() => {
-    if ("serviceWorker" in navigator) {
-      let reg = null;
-
-      const checkForUpdates = () => {
-        navigator.serviceWorker.getRegistration().then((reg) => {
-          if (reg) {
-            setRegistration(reg);
-
-            // Listen for new service worker
-            reg.addEventListener("updatefound", () => {
-              console.log("🔄 New Service Worker found!");
-              const newWorker = reg.installing;
-
-              newWorker.addEventListener("statechange", () => {
-                if (newWorker.state === "installed") {
-                  // There's a new version available!
-                  if (navigator.serviceWorker.controller) {
-                    console.log("🎯 New version ready to activate");
-                    setUpdateAvailable(true);
-                  }
-                }
-              });
-            });
-
-            // Also check immediately
-            reg.update();
-          }
-        });
-      };
-
-      // Initial check
-      checkForUpdates();
-
-      // Listen for controller change (user accepted update)
-      navigator.serviceWorker.addEventListener("controllerchange", () => {
-        console.log("🔄 Controller changed - reloading for new version");
-        window.location.reload();
-      });
-
-      // Check periodically (every 30 minutes)
-      const interval = setInterval(checkForUpdates, 30 * 60 * 1000);
-
-      return () => clearInterval(interval);
-    }
-  }, []);
-
   // useEffect(() => {
   //   // Check if we're on mobile and music hasn't started
   //   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -726,17 +676,6 @@ function App() {
     saveLanguagePreference(newLanguage);
   };
 
-  // Handle update button click
-  const handleUpdate = () => {
-    if (registration && registration.waiting) {
-      // Tell service worker to skip waiting
-      registration.waiting.postMessage({ type: "SKIP_WAITING" });
-
-      // The controllerchange event will trigger reload
-      setUpdateAvailable(false);
-    }
-  };
-
   //
   // Helper function to get the actual message text
   const getGameMessage = () => {
@@ -763,30 +702,6 @@ function App() {
 
   return (
     <div className="app">
-      {/* Update Notification Banner --- begin */}
-      {updateAvailable && (
-        <div className="update-banner">
-          <div className="update-content">
-            <span className="update-icon">🔄</span>
-            <div className="update-text">
-              <strong>New version available!</strong>
-              <small>
-                Refresh to get the latest features and improvements.
-              </small>
-            </div>
-            <button className="update-button" onClick={handleUpdate}>
-              Update Now
-            </button>
-            <button
-              className="update-dismiss"
-              onClick={() => setUpdateAvailable(false)}
-            >
-              Later
-            </button>
-          </div>
-        </div>
-      )}
-      {/* Update Notification Banner --- end */}
       <header className="game-header" ref={section1Ref}>
         <div className="header-top-row">
           <h1 className="game-title">10n</h1>

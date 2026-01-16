@@ -110,16 +110,16 @@ export default defineConfig({
         ],
       },
       workbox: {
-        // CRITICAL FOR MANUAL UPDATES
-        skipWaiting: false, // Let app control when to update
-        clientsClaim: false, // Don't auto-claim clients
-        cleanupOutdatedCaches: true,
-        //
         globPatterns: [
           "**/*.{js,css,html,ico,png,svg,woff2}",
           "**/music/*.{ogg,mp3,wav}", // Add this line for audio files
         ],
         navigateFallback: "/games/10n/index.html",
+        // CRITICAL FOR auto UPDATES
+        skipWaiting: true, // Auto-update
+        clientsClaim: true, // Take control immediately
+        cleanupOutdatedCaches: true,
+        //
         runtimeCaching: [
           {
             urlPattern: /\.(?:png|jpg|jpeg|svg|gif)$/,

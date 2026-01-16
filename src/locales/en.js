@@ -56,6 +56,7 @@ export default {
   // Help Dialog
   helpInstructions: "10n Game - Help & Instructions",
   version: "version",
+  updatesAuto: "Updates happen automatically when you restart the app",
   howToPlay: "🎮 How to Play",
   howToPlay1: "1. <strong>Select numbers</strong> by clicking on them",
   howToPlay2: "2. <strong>Deselect</strong> by clicking again",
