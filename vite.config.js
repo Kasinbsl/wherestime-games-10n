@@ -11,7 +11,11 @@ export default defineConfig({
         enabled: true,
       },
       manifestFilename: "manifest.json",
-      includeAssets: ["favicon.ico"],
+      includeAssets: [
+        "favicon.ico",
+        "icons/*.png", // All icons for manifest
+        "music/*.{ogg,mp3}", // Background music
+      ],
       // base: "/games/10n/",
       manifest: {
         name: "10n",
@@ -106,7 +110,15 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
+        // CRITICAL FOR MANUAL UPDATES
+        skipWaiting: false, // Let app control when to update
+        clientsClaim: false, // Don't auto-claim clients
+        cleanupOutdatedCaches: true,
+        //
+        globPatterns: [
+          "**/*.{js,css,html,ico,png,svg,woff2}",
+          "**/music/*.{ogg,mp3,wav}", // Add this line for audio files
+        ],
         navigateFallback: "/games/10n/index.html",
         runtimeCaching: [
           {
@@ -120,6 +132,19 @@ export default defineConfig({
               },
             },
           },
+          // add a dedicated cache for audio files
+          {
+            urlPattern: /\/music\/.*\.(?:ogg|mp3|wav)$/,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "audio-cache",
+              expiration: {
+                maxEntries: 10, // Store up to 10 audio files
+                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+              },
+            },
+          },
+          //
         ],
       },
       //  the end of plugin object declaration
@@ -128,5 +153,7 @@ export default defineConfig({
   base: "/games/10n/",
   build: {
     outDir: "dist",
+    // 4. Optional: Ensure music files are copied to dist
+    assetsInclude: ["**/*.ogg", "**/*.mp3"],
   },
 });

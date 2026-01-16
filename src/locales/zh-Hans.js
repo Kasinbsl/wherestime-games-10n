@@ -54,6 +54,7 @@ export default {
 
   // Help Dialog
   helpInstructions: "10n 游戏 - 帮助与说明",
+  version: "版本",
   howToPlay: "🎮 如何游戏",
   howToPlay1: "1. <strong>点击数字</strong>选择它们",
   howToPlay2: "2. <strong>再次点击</strong>取消选择",

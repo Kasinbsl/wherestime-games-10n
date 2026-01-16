@@ -66,6 +66,14 @@
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
+.help-dialog-title-version {
+  color: #00adb5;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
 .help-dialog-close-btn {
   background: none;
   border: none;
